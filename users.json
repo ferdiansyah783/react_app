@@ -1,0 +1,81 @@
+{
+  "users": [
+    {
+      "name": "john doe",
+      "username": "john",
+      "email": "john@gmail.com",
+      "role": "user",
+      "id": 5
+    },
+    {
+      "name": "bram saputra",
+      "username": "bram",
+      "email": "bram@gmail.com",
+      "role": "Admin",
+      "id": 6
+    },
+    {
+      "name": "natasha wilona",
+      "username": "wilo",
+      "email": "wilo@gmail.com",
+      "role": "Team",
+      "id": 7
+    },
+    {
+      "name": "anangsyah",
+      "username": "anang",
+      "email": "anang@gmail.com",
+      "role": "user",
+      "id": 8
+    },
+    {
+      "name": "test",
+      "username": "test",
+      "email": "test@gmail.com",
+      "role": "user",
+      "id": 9
+    },
+    {
+      "name": "yuda",
+      "username": "kym",
+      "email": "ykljgkj",
+      "role": "user",
+      "id": 11
+    },
+    {
+      "name": "asd",
+      "username": "asd",
+      "email": "asd",
+      "role": "user",
+      "id": 12
+    },
+    {
+      "name": "123",
+      "username": "123",
+      "email": "123",
+      "role": "user",
+      "id": 13
+    },
+    {
+      "name": "f",
+      "username": "f",
+      "email": "f",
+      "role": "user",
+      "id": 14
+    },
+    {
+      "name": "s",
+      "username": "s",
+      "email": "s",
+      "role": "user",
+      "id": 15
+    },
+    {
+      "name": "h",
+      "username": "h",
+      "email": "h",
+      "role": "user",
+      "id": 16
+    }
+  ]
+}
