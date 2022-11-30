@@ -4,6 +4,7 @@ import { BiSearchAlt } from "react-icons/bi";
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { getAllUsers, searchUser } from "../../server";
+import Pagination from "../layout/Pagination";
 import Create from "./Create";
 import Delete from "./Delete";
 import Update from "./Update";
@@ -16,6 +17,8 @@ const Index = () => {
   const [userId, setUserId] = useState();
   const [activeRole, setActiveRole] = useState("All-Users");
   const [filters, setFilters] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1)
+  const [postsPerPage, setPostsPerPage] = useState(2)
 
   useEffect(() => {
     getAllUsers()
@@ -68,8 +71,12 @@ const Index = () => {
     ));
   };
 
+  const lastPostIndex = currentPage * postsPerPage
+  const firstPostIndex = lastPostIndex - postsPerPage
+  const currentPost = filters.slice(firstPostIndex, lastPostIndex)
+
   const GetAllUsers = () => {
-    return filters.map((value, index) => (
+    return currentPost.map((value, index) => (
       <tr key={index} className="border-b-2">
         <td className="w-[30%] pl-2 py-2">{value?.name}</td>
         <td className="w-[25%] py-2">{value?.username}</td>
@@ -152,7 +159,7 @@ const Index = () => {
           </div>
           <div className="flex items-center">
             <div>
-              <Select required={true} style={{ width: "55px" }}>
+              <Select required={true} className="w-[55px]" onChange={(e) => setPostsPerPage(e.target.value)}>
                 <option>2</option>
                 <option>5</option>
                 <option>10</option>
@@ -178,7 +185,7 @@ const Index = () => {
           </div>
 
           <div className="w-4/5">
-            <table className="table-auto min-w-full shadow-sm">
+            <table className="table-auto min-w-full shadow-sm mb-2">
               <thead className="bg-gray-50 text-left">
                 <tr>
                   <th className="w-[30%] pl-2 py-2">Name</th>
@@ -192,6 +199,7 @@ const Index = () => {
                 <GetAllUsers />
               </tbody>
             </table>
+            <Pagination totalPosts={filters.length} postsPerPage={postsPerPage} setCurrentPage={setCurrentPage} currentPage={currentPage} />
           </div>
         </div>
       </div>
