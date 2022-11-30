@@ -1,12 +1,12 @@
 import { Alert, Button, Label, Modal, Select, TextInput } from "flowbite-react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { createUser } from "../../server";
 
 const Create = (props) => {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState("user");
+  const [role, setRole] = useState("Member");
   const [allertVisible, setAlletrVisible] = useState("hidden")
 
   const user = {
@@ -87,14 +87,14 @@ const Create = (props) => {
               </div>
               <div id="select">
                 <div className="mb-2 block">
-                  <Label htmlFor="countries" value="Select your role" />
+                  <Label htmlFor="roles" value="Select your role" />
                 </div>
                 <Select
                   onChange={(e) => setRole(e.target.value)}
-                  id="countries"
+                  id="roles"
                   required={true}
                 >
-                  <option>User</option>
+                  <option>Member</option>
                   <option>Admin</option>
                   <option>Team</option>
                 </Select>

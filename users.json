@@ -1,81 +1,74 @@
 {
   "users": [
     {
-      "name": "john doe",
-      "username": "john",
-      "email": "john@gmail.com",
-      "role": "user",
-      "id": 5
+      "name": "ferdiansyah",
+      "username": "ferdi",
+      "email": "ferdi@gmail.com",
+      "role": "Member",
+      "id": 1
+    },
+    {
+      "name": "anangsyah",
+      "username": "anang",
+      "email": "anang@gmail.com",
+      "role": "Team",
+      "id": 2
     },
     {
       "name": "bram saputra",
       "username": "bram",
       "email": "bram@gmail.com",
       "role": "Admin",
-      "id": 6
+      "id": 3
+    },
+    {
+      "name": "john doe",
+      "username": "john",
+      "email": "john@gmail.com",
+      "role": "Member",
+      "id": 4
     },
     {
       "name": "natasha wilona",
-      "username": "wilo",
-      "email": "wilo@gmail.com",
+      "username": "nana",
+      "email": "nana@gmail.com",
       "role": "Team",
+      "id": 5
+    },
+    {
+      "name": "iwan fals",
+      "username": "iwan",
+      "email": "iwan@gmail.com",
+      "role": "Admin",
+      "id": 6
+    },
+    {
+      "name": "john smith",
+      "username": "smith",
+      "email": "smith@gmail.com",
+      "role": "Member",
       "id": 7
     },
     {
-      "name": "anangsyah",
-      "username": "anang",
-      "email": "anang@gmail.com",
-      "role": "user",
+      "name": "rendi pangila",
+      "username": "rendi",
+      "email": "rendi@gmail.com",
+      "role": "Team",
       "id": 8
     },
     {
-      "name": "test",
-      "username": "test",
-      "email": "test@gmail.com",
-      "role": "user",
+      "name": "reyhan sinaga",
+      "username": "reyhan",
+      "email": "reyhan@gmail.com",
+      "role": "Admin",
       "id": 9
     },
     {
-      "name": "yuda",
-      "username": "kym",
-      "email": "ykljgkj",
-      "role": "user",
-      "id": 11
-    },
-    {
-      "name": "asd",
-      "username": "asd",
-      "email": "asd",
-      "role": "user",
-      "id": 12
-    },
-    {
-      "name": "123",
-      "username": "123",
-      "email": "123",
-      "role": "user",
-      "id": 13
-    },
-    {
-      "name": "f",
-      "username": "f",
-      "email": "f",
-      "role": "user",
-      "id": 14
-    },
-    {
-      "name": "s",
-      "username": "s",
-      "email": "s",
-      "role": "user",
-      "id": 15
-    },
-    {
-      "name": "h",
-      "username": "h",
-      "email": "h",
-      "role": "user",
-      "id": 16
+      "name": "fina latiifa",
+      "username": "fina",
+      "email": "fina@gmail.com",
+      "role": "Team",
+      "id": 10
     }
   ]
 }

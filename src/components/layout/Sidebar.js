@@ -1,10 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {FaHouseUser} from 'react-icons/fa'
 import {BiUser} from 'react-icons/bi'
 import {GrUserAdmin} from 'react-icons/gr'
 import {HiOutlineUserGroup} from 'react-icons/hi'
 
 const Sidebar = () => {
+    useEffect(() => {
+        
+    })
+
     const sidebarMenu = [
         {
             name: "Home",

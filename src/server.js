@@ -18,6 +18,11 @@ export const getUser = async (id) => {
     return user
 }
 
+export const searchUser = async (query) => {
+    const user = await apiClient.get(`users?username=${query}`)
+    return user
+}
+
 export const createUser = async (data) => {
     const user = await apiClient.post(`users`, data);
     return user
