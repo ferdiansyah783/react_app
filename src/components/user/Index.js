@@ -1,9 +1,9 @@
-import { Dropdown, Label, Radio, Select } from "flowbite-react";
+import { Label, Radio, Select } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { BiSearchAlt } from "react-icons/bi";
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { getAllUsers, searchUser } from "../../server";
+import { getAllUsers, searchUser, sortUser } from "../../server";
 import Pagination from "../layout/Pagination";
 import Create from "./Create";
 import Delete from "./Delete";
@@ -17,8 +17,8 @@ const Index = () => {
   const [userId, setUserId] = useState();
   const [activeRole, setActiveRole] = useState("All-Users");
   const [filters, setFilters] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1)
-  const [postsPerPage, setPostsPerPage] = useState(2)
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(2);
 
   useEffect(() => {
     getAllUsers()
@@ -29,10 +29,29 @@ const Index = () => {
       .catch((err) => console.log(err));
   }, []);
 
+  const searchDataUser = (query) => {
+    if (query !== null) {
+      searchUser(query)
+        .then((result) => setFilters(result.data))
+        .catch((err) => console.log(err));
+    } else {
+      getAllUsers();
+    }
+  };
+
+  const sortDataUser = (query) => {
+    sortUser(query)
+      .then((result) => setUsers(result.data))
+      .catch((err) => console.log(err));
+      
+  };
+
   useEffect(() => {
-    const filter = users.filter((user) => activeRole === "All-Users" ? user : user.role === activeRole)
+    const filter = users.filter((user) =>
+      activeRole === "All-Users" ? user : user.role === activeRole
+    );
     setFilters(filter);
-  }, [activeRole, setFilters, users])
+  }, [activeRole, setFilters, users, setActiveRole]);
 
   const roles = [
     {
@@ -71,9 +90,9 @@ const Index = () => {
     ));
   };
 
-  const lastPostIndex = currentPage * postsPerPage
-  const firstPostIndex = lastPostIndex - postsPerPage
-  const currentPost = filters.slice(firstPostIndex, lastPostIndex)
+  const lastPostIndex = currentPage * postsPerPage;
+  const firstPostIndex = lastPostIndex - postsPerPage;
+  const currentPost = filters.slice(firstPostIndex, lastPostIndex);
 
   const GetAllUsers = () => {
     return currentPost.map((value, index) => (
@@ -104,12 +123,6 @@ const Index = () => {
         </td>
       </tr>
     ));
-  };
-
-  const searchDataUser = (query) => {
-    searchUser(query)
-      .then((result) => setUsers(result.data))
-      .catch((err) => console.log(err));
   };
 
   const handleModalCreate = () => {
@@ -159,19 +172,28 @@ const Index = () => {
           </div>
           <div className="flex items-center">
             <div>
-              <Select required={true} className="w-[55px]" onChange={(e) => setPostsPerPage(e.target.value)}>
+              <Select
+                required={true}
+                className="w-[55px]"
+                onChange={(e) => setPostsPerPage(e.target.value)}
+              >
                 <option>2</option>
                 <option>5</option>
                 <option>10</option>
               </Select>
             </div>
-            <div className="ml-5">
-              <Dropdown label="Dropdown" inline={true}>
-                <Dropdown.Item>Name</Dropdown.Item>
-                <Dropdown.Item>Settings</Dropdown.Item>
-                <Dropdown.Item>Earnings</Dropdown.Item>
-                <Dropdown.Item>Sign out</Dropdown.Item>
-              </Dropdown>
+            <div className="ml-3">
+              <Select
+                required={true}
+                className="w-[85px] outline-none"
+                style={{backgroundColor: "transparent"}}
+                onChange={(e) => sortDataUser(e.target.value)}
+              >
+                <option value={''}>Sorting</option>
+                <option>name</option>
+                <option>username</option>
+                <option>email</option>
+              </Select>
             </div>
           </div>
         </div>
@@ -199,7 +221,12 @@ const Index = () => {
                 <GetAllUsers />
               </tbody>
             </table>
-            <Pagination totalPosts={filters.length} postsPerPage={postsPerPage} setCurrentPage={setCurrentPage} currentPage={currentPage} />
+            <Pagination
+              totalPosts={filters.length}
+              postsPerPage={postsPerPage}
+              setCurrentPage={setCurrentPage}
+              currentPage={currentPage}
+            />
           </div>
         </div>
       </div>

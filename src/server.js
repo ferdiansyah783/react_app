@@ -19,7 +19,12 @@ export const getUser = async (id) => {
 }
 
 export const searchUser = async (query) => {
-    const user = await apiClient.get(`users?username=${query}`)
+    const user = await apiClient.get(`users?name_like&username_like=${query}`)
+    return user
+}
+
+export const sortUser = async (query) => {
+    const user = await apiClient.get(`users?_sort=${query}&_order=asc`)
     return user
 }
 
