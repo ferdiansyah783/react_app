@@ -75,7 +75,10 @@ const Index = () => {
   const GetAllRoles = () => {
     return roles.map((role) => (
       <div
-        onClick={() => setActiveRole(role.name)}
+        onClick={() => {
+          setActiveRole(role.name)
+          setCurrentPage(1)
+        }}
         key={role.id}
         className="flex items-center gap-2"
       >
@@ -175,7 +178,10 @@ const Index = () => {
               <Select
                 required={true}
                 className="w-[55px]"
-                onChange={(e) => setPostsPerPage(e.target.value)}
+                onChange={(e) => {
+                  setPostsPerPage(e.target.value)
+                  setCurrentPage(1)
+                }}
               >
                 <option>2</option>
                 <option>5</option>
