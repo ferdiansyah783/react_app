@@ -18,8 +18,8 @@ export const getUser = async (id) => {
     return user
 }
 
-export const searchUser = async (query) => {
-    const user = await apiClient.get(`users?name_like&username_like=${query}`)
+export const searchUser = async (role, query) => {
+    const user = await apiClient.get(`users?role=${role}&q=${query}`)
     return user
 }
 

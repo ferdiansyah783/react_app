@@ -29,9 +29,9 @@ const Index = () => {
       .catch((err) => console.log(err));
   }, []);
 
-  const searchDataUser = (query) => {
+  const searchDataUser = (role, query) => {
     if (query !== null) {
-      searchUser(query)
+      searchUser(role, query)
         .then((result) => setFilters(result.data))
         .catch((err) => console.log(err));
     } else {
@@ -43,7 +43,6 @@ const Index = () => {
     sortUser(query)
       .then((result) => setUsers(result.data))
       .catch((err) => console.log(err));
-      
   };
 
   useEffect(() => {
@@ -170,7 +169,7 @@ const Index = () => {
             <input
               placeholder="search"
               className="outline-none ml-2 w-full"
-              onChange={(e) => searchDataUser(e.target.value)}
+              onChange={(e) => searchDataUser(activeRole, e.target.value)}
             />
           </div>
           <div className="flex items-center">
