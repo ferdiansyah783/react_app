@@ -1,22 +1,9 @@
 import { Alert, Button, Modal } from "flowbite-react";
 import React, { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-import { deleteUser } from "../../server";
 
 const Delete = (props) => {
   const [allertVisible, setAlletrVisible] = useState("hidden");
-
-  const removeDatauser = (id) => {
-    deleteUser(id)
-      .then(() => {
-        props.close();
-        setAlletrVisible("block");
-        setTimeout(() => {
-          setAlletrVisible("hidden");
-        }, 4000);
-      })
-      .catch((err) => console.log(err));
-  };
 
   return (
     <>
@@ -43,7 +30,7 @@ const Delete = (props) => {
               <div className="flex justify-center gap-4">
                 <Button
                   color="failure"
-                  onClick={() => removeDatauser(props.id)}
+                  onClick={props.deleteUser}
                 >
                   Yes, I'm sure
                 </Button>

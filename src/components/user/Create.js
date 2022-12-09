@@ -1,6 +1,6 @@
 import { Alert, Button, Label, Modal, Select, TextInput } from "flowbite-react";
 import React, { useState } from "react";
-import { createUser } from "../../server";
+import { createUser, getAllUsers } from "../../server";
 
 const Create = (props) => {
   const [name, setName] = useState("");
@@ -20,6 +20,7 @@ const Create = (props) => {
     createUser(data)
       .then((result) => {
         if (result.status === 201) {
+          getAllUsers()
           props.close();
           setAlletrVisible("block")
           setTimeout(() => {

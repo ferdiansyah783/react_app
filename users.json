@@ -1,13 +1,6 @@
 {
   "users": [
     {
-      "name": "ferdiansyah",
-      "username": "ferdi",
-      "email": "ferdi@gmail.com",
-      "role": "Member",
-      "id": 1
-    },
-    {
       "name": "anangsyah",
       "username": "anang",
       "email": "anang@gmail.com",
@@ -27,48 +20,6 @@
       "email": "john@gmail.com",
       "role": "Member",
       "id": 4
-    },
-    {
-      "name": "natasha wilona",
-      "username": "nana",
-      "email": "nana@gmail.com",
-      "role": "Team",
-      "id": 5
-    },
-    {
-      "name": "iwan fals",
-      "username": "iwan",
-      "email": "iwan@gmail.com",
-      "role": "Admin",
-      "id": 6
-    },
-    {
-      "name": "john smith",
-      "username": "smith",
-      "email": "smith@gmail.com",
-      "role": "Member",
-      "id": 7
-    },
-    {
-      "name": "rendi pangila",
-      "username": "rendi",
-      "email": "rendi@gmail.com",
-      "role": "Team",
-      "id": 8
-    },
-    {
-      "name": "reyhan sinaga",
-      "username": "reyhan",
-      "email": "reyhan@gmail.com",
-      "role": "Admin",
-      "id": 9
-    },
-    {
-      "name": "fina latiifa",
-      "username": "fina",
-      "email": "fina@gmail.com",
-      "role": "Team",
-      "id": 10
     }
   ]
 }

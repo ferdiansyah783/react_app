@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { BiSearchAlt } from "react-icons/bi";
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { getAllUsers, searchUser, sortUser } from "../../server";
+import { deleteUser, getAllUsers, searchUser, sortUser } from "../../server";
 import Pagination from "../layout/Pagination";
 import Create from "./Create";
 import Delete from "./Delete";
@@ -14,11 +14,12 @@ const Index = () => {
   const [modalCreateVisible, setModalCreateVisible] = useState(false);
   const [modalUpdateVisible, setModalUpdateVisible] = useState(false);
   const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
-  const [userId, setUserId] = useState();
+  const [userId, setUserId] = useState(1);
   const [activeRole, setActiveRole] = useState("All-Users");
   const [filters, setFilters] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(2);
+  const [callUser, setCallUser] = useState(false)
 
   useEffect(() => {
     getAllUsers()
@@ -27,12 +28,15 @@ const Index = () => {
         setFilters(result.data);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [callUser]);
 
-  const searchDataUser = (role, query) => {
+  const searchDataUser = (query) => {
     if (query !== null) {
-      searchUser(role, query)
-        .then((result) => setFilters(result.data))
+      searchUser(query)
+        .then((result) => {
+          setFilters(result.data)
+          setCurrentPage(1)
+        })
         .catch((err) => console.log(err));
     } else {
       getAllUsers();
@@ -51,6 +55,19 @@ const Index = () => {
     );
     setFilters(filter);
   }, [activeRole, setFilters, users, setActiveRole]);
+
+  const removeDatauser = () => {
+    deleteUser(userId)
+      .then(() => {
+        handleModalDelete()
+        setCallUser((callUser) => !callUser)
+        // setAlletrVisible("block");
+        // setTimeout(() => {
+        //   setAlletrVisible("hidden");
+        // }, 4000);
+      })
+      .catch((err) => console.log(err));
+  };
 
   const roles = [
     {
@@ -149,7 +166,7 @@ const Index = () => {
     <>
       <Create show={modalCreateVisible} close={handleModalCreate} />
       <Update show={modalUpdateVisible} close={handleModalUpdate} id={userId} />
-      <Delete show={modalDeleteVisible} close={handleModalDelete} id={userId} />
+      <Delete show={modalDeleteVisible} close={handleModalDelete} id={userId} deleteUser={removeDatauser} />
       <div className="min-w-full h-full p-5">
         <div className="flex items-center justify-between mb-2">
           <div className="font-semibold text-2xl ml-6">Manage User</div>
@@ -169,7 +186,7 @@ const Index = () => {
             <input
               placeholder="search"
               className="outline-none ml-2 w-full"
-              onChange={(e) => searchDataUser(activeRole, e.target.value)}
+              onChange={(e) => searchDataUser(e.target.value)}
             />
           </div>
           <div className="flex items-center">
