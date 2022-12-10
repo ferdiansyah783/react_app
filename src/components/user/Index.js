@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { BiSearchAlt } from "react-icons/bi";
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { deleteUser, getAllUsers, searchUser, sortUser } from "../../server";
+import { getAllUsers, searchUser, sortUser } from "../../server";
 import Pagination from "../layout/Pagination";
 import Create from "./Create";
 import Delete from "./Delete";
@@ -34,7 +34,8 @@ const Index = () => {
     if (query !== null) {
       searchUser(query)
         .then((result) => {
-          setFilters(result.data)
+          const filter = result?.data.filter((user) => activeRole === "All-Users" ? user : user.role === activeRole)
+          setFilters(filter)
           setCurrentPage(1)
         })
         .catch((err) => console.log(err));
@@ -55,19 +56,6 @@ const Index = () => {
     );
     setFilters(filter);
   }, [activeRole, setFilters, users, setActiveRole]);
-
-  const removeDatauser = () => {
-    deleteUser(userId)
-      .then(() => {
-        handleModalDelete()
-        setCallUser((callUser) => !callUser)
-        // setAlletrVisible("block");
-        // setTimeout(() => {
-        //   setAlletrVisible("hidden");
-        // }, 4000);
-      })
-      .catch((err) => console.log(err));
-  };
 
   const roles = [
     {
@@ -164,9 +152,9 @@ const Index = () => {
 
   return (
     <>
-      <Create show={modalCreateVisible} close={handleModalCreate} />
-      <Update show={modalUpdateVisible} close={handleModalUpdate} id={userId} />
-      <Delete show={modalDeleteVisible} close={handleModalDelete} id={userId} deleteUser={removeDatauser} />
+      <Create show={modalCreateVisible} close={handleModalCreate} setCallUser={setCallUser} />
+      <Update show={modalUpdateVisible} close={handleModalUpdate} id={userId} setCallUser={setCallUser} />
+      <Delete show={modalDeleteVisible} close={handleModalDelete} id={userId} setCallUser={setCallUser} />
       <div className="min-w-full h-full p-5">
         <div className="flex items-center justify-between mb-2">
           <div className="font-semibold text-2xl ml-6">Manage User</div>
@@ -208,7 +196,7 @@ const Index = () => {
               <Select
                 required={true}
                 className="w-[85px] outline-none"
-                style={{backgroundColor: "transparent"}}
+                style={{ backgroundColor: "transparent" }}
                 onChange={(e) => sortDataUser(e.target.value)}
               >
                 <option value={''}>Sorting</option>

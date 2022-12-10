@@ -34,6 +34,7 @@ const Update = (props) => {
         if (result.status === 200) {
           props.close();
           setAlletrVisible("block");
+          props.setCallUser((user) => !user)
           setTimeout(() => {
             setAlletrVisible("hidden");
           }, 4000);
