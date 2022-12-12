@@ -14,33 +14,40 @@ const Index = () => {
   const [modalCreateVisible, setModalCreateVisible] = useState(false);
   const [modalUpdateVisible, setModalUpdateVisible] = useState(false);
   const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
-  const [userId, setUserId] = useState(1);
+  const [userId, setUserId] = useState(2);
   const [activeRole, setActiveRole] = useState("All-Users");
   const [filters, setFilters] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(2);
-  const [callUser, setCallUser] = useState(false)
+  const [callUser, setCallUser] = useState(false);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
-    getAllUsers()
+    getAllUsers(query)
       .then((result) => {
         setUsers(result.data);
         setFilters(result.data);
       })
       .catch((err) => console.log(err));
-  }, [callUser]);
+  }, [callUser, query]);
+
+  console.log(query)
 
   const searchDataUser = (query) => {
     if (query !== null) {
+      setQuery(query)
       searchUser(query)
         .then((result) => {
-          const filter = result?.data.filter((user) => activeRole === "All-Users" ? user : user.role === activeRole)
-          setFilters(filter)
-          setCurrentPage(1)
+          const filter = result?.data.filter((user) =>
+            activeRole === "All-Users" ? user : user.role === activeRole
+          );
+          setFilters(filter);
+          setCurrentPage(1);
         })
         .catch((err) => console.log(err));
     } else {
       getAllUsers();
+      setCallUser((user) => !user)
     }
   };
 
@@ -80,8 +87,8 @@ const Index = () => {
     return roles.map((role) => (
       <div
         onClick={() => {
-          setActiveRole(role.name)
-          setCurrentPage(1)
+          setActiveRole(role.name);
+          setCurrentPage(1);
         }}
         key={role.id}
         className="flex items-center gap-2"
@@ -152,9 +159,23 @@ const Index = () => {
 
   return (
     <>
-      <Create show={modalCreateVisible} close={handleModalCreate} setCallUser={setCallUser} />
-      <Update show={modalUpdateVisible} close={handleModalUpdate} id={userId} setCallUser={setCallUser} />
-      <Delete show={modalDeleteVisible} close={handleModalDelete} id={userId} setCallUser={setCallUser} />
+      <Create
+        show={modalCreateVisible}
+        close={handleModalCreate}
+        setCallUser={setCallUser}
+      />
+      <Update
+        show={modalUpdateVisible}
+        close={handleModalUpdate}
+        id={userId}
+        setCallUser={setCallUser}
+      />
+      <Delete
+        show={modalDeleteVisible}
+        close={handleModalDelete}
+        id={userId}
+        setCallUser={setCallUser}
+      />
       <div className="min-w-full h-full p-5">
         <div className="flex items-center justify-between mb-2">
           <div className="font-semibold text-2xl ml-6">Manage User</div>
@@ -183,8 +204,8 @@ const Index = () => {
                 required={true}
                 className="w-[55px]"
                 onChange={(e) => {
-                  setPostsPerPage(e.target.value)
-                  setCurrentPage(1)
+                  setPostsPerPage(e.target.value);
+                  setCurrentPage(1);
                 }}
               >
                 <option>2</option>
@@ -199,7 +220,7 @@ const Index = () => {
                 style={{ backgroundColor: "transparent" }}
                 onChange={(e) => sortDataUser(e.target.value)}
               >
-                <option value={''}>Sorting</option>
+                <option value={""}>Sorting</option>
                 <option>name</option>
                 <option>username</option>
                 <option>email</option>

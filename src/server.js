@@ -8,8 +8,8 @@ const apiClient = axios.create({
     }
 });
 
-export const getAllUsers = async () => {
-    const users = await apiClient.get(`users`);
+export const getAllUsers = async (query) => {
+    const users = await apiClient.get(`users?q=${query}`);
     return users;
 }
 

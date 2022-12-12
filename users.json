@@ -27,6 +27,20 @@
       "email": "iqsal@gmail.com",
       "role": "Team",
       "id": 5
+    },
+    {
+      "name": "dom toreto",
+      "username": "dom",
+      "email": "dom@gmail.com",
+      "role": "Admin",
+      "id": 6
+    },
+    {
+      "name": "bryan fury",
+      "username": "bryan",
+      "email": "bryna@gmail.com",
+      "role": "Member",
+      "id": 7
     }
   ]
 }
