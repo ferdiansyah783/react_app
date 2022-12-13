@@ -1,16 +1,22 @@
 import { Alert, Button, Modal } from "flowbite-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { deleteUser } from "../../server";
 
 const Delete = (props) => {
   const [allertVisible, setAlletrVisible] = useState("hidden");
+  const [userId, setUserId] = useState('');
+
+  useEffect(() => {
+    setUserId(props.user.id)
+  }, [props])
 
   const removeDatauser = () => {
-    deleteUser(props.id)
+    deleteUser(userId)
       .then(() => {
         props.close()
         props.setCallUser((callUser) => !callUser)
+        props.setCurrentPage(1)
         setAlletrVisible("block");
         setTimeout(() => {
           setAlletrVisible("hidden");
@@ -24,7 +30,7 @@ const Delete = (props) => {
       {/* alert */}
       <Alert
         className={`${allertVisible} absolute top-0 right-0 left-0 w-2/4 mx-auto`}
-        color="failure"
+        color="success"
       >
         <span>
           <span className="font-medium">Info alert!</span> user remove

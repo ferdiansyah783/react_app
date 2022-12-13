@@ -14,13 +14,19 @@ const Index = () => {
   const [modalCreateVisible, setModalCreateVisible] = useState(false);
   const [modalUpdateVisible, setModalUpdateVisible] = useState(false);
   const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
-  const [userId, setUserId] = useState(2);
   const [activeRole, setActiveRole] = useState("All-Users");
   const [filters, setFilters] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(2);
   const [callUser, setCallUser] = useState(false);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
+  const [dataUser, setDataUser] = useState({
+    id: "",
+    name: "",
+    username: "",
+    email: "",
+    role: "",
+  })
 
   useEffect(() => {
     getAllUsers(query)
@@ -31,11 +37,9 @@ const Index = () => {
       .catch((err) => console.log(err));
   }, [callUser, query]);
 
-  console.log(query)
-
   const searchDataUser = (query) => {
     if (query !== null) {
-      setQuery(query)
+      setQuery(query);
       searchUser(query)
         .then((result) => {
           const filter = result?.data.filter((user) =>
@@ -47,7 +51,7 @@ const Index = () => {
         .catch((err) => console.log(err));
     } else {
       getAllUsers();
-      setCallUser((user) => !user)
+      setCallUser((user) => !user);
     }
   };
 
@@ -83,105 +87,36 @@ const Index = () => {
     },
   ];
 
-  const GetAllRoles = () => {
-    return roles.map((role) => (
-      <div
-        onClick={() => {
-          setActiveRole(role.name);
-          setCurrentPage(1);
-        }}
-        key={role.id}
-        className="flex items-center gap-2"
-      >
-        <Radio
-          id={role.name}
-          name="roles"
-          value={role.name}
-          defaultChecked={activeRole === role.name && true}
-        />
-        <Label htmlFor={role.name}>{role.name}</Label>
-      </div>
-    ));
-  };
-
   const lastPostIndex = currentPage * postsPerPage;
   const firstPostIndex = lastPostIndex - postsPerPage;
   const currentPost = filters.slice(firstPostIndex, lastPostIndex);
-
-  const GetAllUsers = () => {
-    return currentPost.map((value, index) => (
-      <tr key={index} className="border-b-2">
-        <td className="w-[30%] pl-2 py-2">{value?.name}</td>
-        <td className="w-[25%] py-2">{value?.username}</td>
-        <td className="w-[25%] py-2">{value?.email}</td>
-        <td className="w-[10%] py-2">{value?.role}</td>
-        <td className="py-2 text-center">
-          <button
-            onClick={() => {
-              handleModalUpdate();
-              setUserId(value?.id);
-            }}
-            className="mr-7 text-indigo-500"
-          >
-            <FaEdit className="text-xl" />
-          </button>
-          <button
-            onClick={() => {
-              handleModalDelete();
-              setUserId(value?.id);
-            }}
-            className="text-red-600"
-          >
-            <RiDeleteBin6Line className="text-xl" />
-          </button>
-        </td>
-      </tr>
-    ));
-  };
-
-  const handleModalCreate = () => {
-    modalCreateVisible === false
-      ? setModalCreateVisible(true)
-      : setModalCreateVisible(false);
-  };
-
-  const handleModalUpdate = () => {
-    modalUpdateVisible === false
-      ? setModalUpdateVisible(true)
-      : setModalUpdateVisible(false);
-  };
-
-  const handleModalDelete = () => {
-    modalDeleteVisible === false
-      ? setModalDeleteVisible(true)
-      : setModalDeleteVisible(false);
-  };
 
   return (
     <>
       <Create
         show={modalCreateVisible}
-        close={handleModalCreate}
+        close={() => setModalCreateVisible((visible) => !visible)}
         setCallUser={setCallUser}
       />
       <Update
         show={modalUpdateVisible}
-        close={handleModalUpdate}
-        id={userId}
+        close={() => setModalUpdateVisible((visible) => !visible)}
+        user={dataUser}
         setCallUser={setCallUser}
       />
       <Delete
         show={modalDeleteVisible}
-        close={handleModalDelete}
-        id={userId}
+        close={() => setModalDeleteVisible((visible) => !visible)}
+        user={dataUser}
         setCallUser={setCallUser}
+        setCurrentPage={setCurrentPage}
       />
       <div className="min-w-full h-full p-5">
         <div className="flex items-center justify-between mb-2">
           <div className="font-semibold text-2xl ml-6">Manage User</div>
           <div className="">
             <button
-              onClick={handleModalCreate}
+              onClick={() => setModalCreateVisible((visible) => !visible)}
               className="bg-indigo-600 text-white p-2 rounded-md px-3"
             >
               Add User
@@ -233,7 +168,24 @@ const Index = () => {
           <div className="w-1/5 px-8">
             <fieldset className="flex flex-col gap-4" id="radio">
               <legend className="pb-6 font-semibold">Choose your role</legend>
-              <GetAllRoles />
+              {roles.map((role) => (
+                <div
+                  onClick={() => {
+                    setActiveRole(role.name);
+                    setCurrentPage(1);
+                  }}
+                  key={role.id}
+                  className="flex items-center gap-2"
+                >
+                  <Radio
+                    id={role.name}
+                    name="roles"
+                    value={role.name}
+                    defaultChecked={activeRole === role.name && true}
+                  />
+                  <Label htmlFor={role.name}>{role.name}</Label>
+                </div>
+              ))}
             </fieldset>
           </div>
 
@@ -249,7 +201,46 @@ const Index = () => {
                 </tr>
               </thead>
               <tbody>
-                <GetAllUsers />
+                {currentPost.length < 1 ? (
+                  <tr className="text-2xl font-normal">
+                    <td className="p-5">Data Empty</td>
+                  </tr>
+                ) : (
+                  currentPost.map((value, index) => (
+                    <tr key={index} className="border-b-2">
+                      <td className="w-[30%] pl-2 py-2">{value?.name}</td>
+                      <td className="w-[25%] py-2">{value?.username}</td>
+                      <td className="w-[25%] py-2">{value?.email}</td>
+                      <td className="w-[10%] py-2">{value?.role}</td>
+                      <td className="py-2 text-center">
+                        <button
+                          onClick={() => {
+                            setModalUpdateVisible((visible) => !visible);
+                            setDataUser({
+                              id: value?.id,
+                              name: value?.name,
+                              username: value?.username,
+                              email: value?.email,
+                              role: value?.role,
+                            })
+                          }}
+                          className="mr-7 text-indigo-500"
+                        >
+                          <FaEdit className="text-xl" />
+                        </button>
+                        <button
+                          onClick={() => {
+                            setModalDeleteVisible((visible) => !visible);
+                            setDataUser({...dataUser, id: value?.id})
+                          }}
+                          className="text-red-600"
+                        >
+                          <RiDeleteBin6Line className="text-xl" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
             <Pagination

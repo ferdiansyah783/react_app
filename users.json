@@ -1,11 +1,11 @@
 {
   "users": [
     {
-      "name": "anangsyah",
+      "id": 2,
+      "name": "anangsyah hakim",
       "username": "anang",
       "email": "anang@gmail.com",
-      "role": "Team",
-      "id": 2
+      "role": "Team"
     },
     {
       "name": "bram saputra",
@@ -41,6 +41,20 @@
       "email": "bryna@gmail.com",
       "role": "Member",
       "id": 7
+    },
+    {
+      "name": "trgyrwegtwer",
+      "username": "regtwrtgwer",
+      "email": "ertgwtwerte",
+      "role": "Member",
+      "id": 8
+    },
+    {
+      "name": "sas",
+      "username": "sasa",
+      "email": "asas@gmail.com",
+      "role": "Member",
+      "id": 9
     }
   ]
 }

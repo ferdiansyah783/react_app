@@ -1,40 +1,34 @@
 import { Alert, Button, Label, Modal, Select, TextInput } from "flowbite-react";
 import React, { useEffect, useState } from "react";
-import { getUser, updateUser } from "../../server";
+import { updateUser } from "../../server";
 
 const Update = (props) => {
-  const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [role, setRole] = useState("");
+  const [dataUser, setDataUser] = useState({
+    id: "",
+    name: "",
+    username: "",
+    email: "",
+    role: "",
+  });
   const [allertVisible, setAlletrVisible] = useState("hidden");
 
   useEffect(() => {
-    getUser(props.id)
-      .then((result) => {
-        setName(result.data?.name);
-        setUsername(result.data?.username);
-        setEmail(result.data?.email);
-        setRole(result.data?.role);
-      })
-      .catch((err) => console.log(err));
+    setDataUser({
+      id: props.user.id,
+      name: props.user.name,
+      username: props.user.username,
+      email: props.user.email,
+      role: props.user.role,
+    });
   }, [props]);
 
-  const user = {
-    name: name,
-    username: username,
-    email: email,
-    role: role,
-    id: props.id,
-  };
-
-  const updateDataUser = (data) => {
-    updateUser(data)
+  const updateDataUser = () => {
+    updateUser(dataUser)
       .then((result) => {
         if (result.status === 200) {
           props.close();
           setAlletrVisible("block");
-          props.setCallUser((user) => !user)
+          props.setCallUser((user) => !user);
           setTimeout(() => {
             setAlletrVisible("hidden");
           }, 4000);
@@ -73,8 +67,10 @@ const Update = (props) => {
                   id="name"
                   placeholder="input your name"
                   required={true}
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={dataUser.name}
+                  onChange={(e) =>
+                    setDataUser({ ...dataUser, name: e.target.value })
+                  }
                 />
               </div>
               <div>
@@ -85,8 +81,10 @@ const Update = (props) => {
                   id="username"
                   placeholder="input your username"
                   required={true}
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={dataUser.username}
+                  onChange={(e) =>
+                    setDataUser({ ...dataUser, username: e.target.value })
+                  }
                 />
               </div>
               <div>
@@ -97,8 +95,10 @@ const Update = (props) => {
                   id="email"
                   placeholder="name@company.com"
                   required={true}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={dataUser.email}
+                  onChange={(e) =>
+                    setDataUser({ ...dataUser, email: e.target.value })
+                  }
                 />
               </div>
               <div id="select">
@@ -106,8 +106,10 @@ const Update = (props) => {
                   <Label htmlFor="countries" value="Select your role" />
                 </div>
                 <Select
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
+                  value={dataUser.role}
+                  onChange={(e) =>
+                    setDataUser({ ...dataUser, role: e.target.value })
+                  }
                   id="countries"
                   required={true}
                 >
@@ -117,7 +119,7 @@ const Update = (props) => {
                 </Select>
               </div>
               <div className="w-full">
-                <Button onClick={() => updateDataUser(user)}>Save</Button>
+                <Button onClick={updateDataUser}>Save</Button>
               </div>
             </div>
           </Modal.Body>
