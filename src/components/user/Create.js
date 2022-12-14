@@ -5,7 +5,11 @@ import { createUser } from "../../server";
 const Create = (props) => {
   const [allertVisible, setAlletrVisible] = useState("hidden");
   const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState({
+    name: "",
+    username: "",
+    email: "",
+  });
   const [dataUser, setDataUser] = useState({
     name: "",
     username: "",
@@ -20,14 +24,26 @@ const Create = (props) => {
       dataUser.email.length < 1
     ) {
       setError(true);
-      setErrorMessage("Required")
+      setErrorMessage({
+        name: "field required",
+        username: "field required",
+        email: "field required"
+      })
       return false;
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(dataUser.email)) {
       setError(true);
-      setErrorMessage("must be a email")
+      setErrorMessage({...errorMessage, email: "must be a email"})
+      return false
+    } else if (!/^[_A-z0-9]*((-|\s)*[_A-z0-9])*$/g.test(dataUser.name || dataUser.username || dataUser.email)) {
+      setError(true)
+      setErrorMessage({
+        name: "only alphabet",
+        username: "only alphabet",
+        email: "only alphabet"
+      })
       return false
     }
-
+    
     createUser(dataUser)
       .then((result) => {
         if (result.status === 201) {
@@ -96,9 +112,9 @@ const Create = (props) => {
                       setDataUser({ ...dataUser, name: e.target.value })
                     }
                   />
-                  {error && dataUser.name.length < 1 && (
+                  {error && (
                     <label className="text-red-600 text-sm">
-                      Name {errorMessage}
+                      {errorMessage.name}
                     </label>
                   )}
                 </div>
@@ -116,9 +132,9 @@ const Create = (props) => {
                       setDataUser({ ...dataUser, username: e.target.value })
                     }
                   />
-                  {error && dataUser.username.length < 1 && (
+                  {error && (
                     <label className="text-red-600 text-sm">
-                      Username {errorMessage}
+                      {errorMessage.username}
                     </label>
                   )}
                 </div>
@@ -135,9 +151,9 @@ const Create = (props) => {
                       setDataUser({ ...dataUser, email: e.target.value })
                     }
                   />
-                  {error && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(dataUser.email) && (
+                  {error && (
                     <label className="text-red-600 text-sm">
-                      Email {errorMessage}
+                      {errorMessage.email}
                     </label>
                   )}
                 </div>
