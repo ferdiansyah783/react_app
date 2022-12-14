@@ -19,7 +19,7 @@ const Create = (props) => {
   const validate = (value) => {
     const regex = {
       isEmail: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-      isAlpha: /^[_A-z0-9]*((-|\s)*[_A-z0-9])*$/g,
+      isAlpha: /^[_A-z0-9]*((-|\s)*[_A-z0-9])*$/,
     };
 
     if (!value.name) {
@@ -51,7 +51,6 @@ const Create = (props) => {
 
   const addNewUser = () => {
     if (!validate(dataUser)) {
-      console.log("error ini");
       return;
     }
 
@@ -59,8 +58,8 @@ const Create = (props) => {
       .then((result) => {
         if (result.status === 201) {
           props.close();
-          setAlletrVisible("block");
           props.setCallUser((data) => !data);
+          setAlletrVisible("block");
           setDataUser({
             name: "",
             username: "",
