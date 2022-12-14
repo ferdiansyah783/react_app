@@ -22,61 +22,115 @@ const Create = (props) => {
       isAlpha: /^[_A-z0-9]*((-|\s)*[_A-z0-9])*$/,
     };
 
-    if (!value.name) {
-      setErrorMessage({ name: "field required" });
-      return false;
-    } else if (!regex.isAlpha.test(value.name)) {
-      setErrorMessage({ name: "field only alphabet" });
-      return false;
+    const _key = Object.keys(value);
+
+    const _error = {};
+
+    for (var i = 0; i < _key.length; i++) {
+
+      // Validasi pertama kalau data kosong
+
+      if (!value[_key[i]]) {
+        _error[_key[i]] = 'field required';
+        break;
+      }
+
+      // validasi sesui pattern
+
+      // name
+
+      if (_key[i] == 'name' && !regex.isAlpha.test(value.name)) {
+        _error[_key[i]] = 'field only alphabet';
+        break;
+      }
+
+      // username
+
+      if (_key[i] == 'username' && !regex.isAlpha.test(value.username)) {
+        _error[_key[i]] = 'field only alphabet';
+        break;
+      }
+
+      // email
+
+      if (_key[i] == 'email' && !regex.isEmail.test(value.email)) {
+        _error[_key[i]] = 'field must be a email';
+        break;
+      }
+
     }
 
-    if (!value.username) {
-      setErrorMessage({ username: "field required" });
-      return false;
-    } else if (!regex.isAlpha.test(value.username)) {
-      setErrorMessage({ username: "field only alphabet" });
-      return false;
-    }
+    return _error;
 
-    if (!value.email) {
-      setErrorMessage({ email: "field required" });
-      return false;
-    } else if (!regex.isEmail.test(value.email)) {
-      setErrorMessage({ email: "field must be a email" });
-      return false;
-    }
 
-    return true;
+    // if (!value.name) {
+    //   setErrorMessage({ name: "field required" });
+    //   return false;
+    // } else if (!regex.isAlpha.test(value.name)) {
+    //   setErrorMessage({ name: "field only alphabet" });
+    //   return false;
+    // }
+
+    // if (!value.username) {
+    //   setErrorMessage({ username: "field required" });
+    //   return false;
+    // } else if (!regex.isAlpha.test(value.username)) {
+    //   setErrorMessage({ username: "field only alphabet" });
+    //   return false;
+    // }
+
+    // if (!value.email) {
+    //   setErrorMessage({ email: "field required" });
+    //   return false;
+    // } else if (!regex.isEmail.test(value.email)) {
+    //   setErrorMessage({ email: "field must be a email" });
+    //   return false;
+    // }
+
+    // return true;
   };
 
   const addNewUser = () => {
-    if (!validate(dataUser)) {
-      return;
+
+    // if (!validate(dataUser)) {
+    //   return;
+    // }
+
+    // kalau ada error setelah proses validasi setErrorMessage
+
+    const validateData = validate(dataUser);
+
+    if (validateData) {
+      setErrorMessage(validateData);
+    } else {
+      createUser(dataUser)
+        .then((result) => {
+          if (result.status === 201) {
+            props.close();
+            props.setCallUser((data) => !data);
+            setAlletrVisible("block");
+            setDataUser({
+              name: "",
+              username: "",
+              email: "",
+              role: "Member",
+            });
+            setErrorMessage({
+              name: "",
+              username: "",
+              email: "",
+            });
+            setTimeout(() => {
+              setAlletrVisible("hidden");
+            }, 4000);
+          }
+        })
+        .catch((error) => console.log(error));
     }
 
-    createUser(dataUser)
-      .then((result) => {
-        if (result.status === 201) {
-          props.close();
-          props.setCallUser((data) => !data);
-          setAlletrVisible("block");
-          setDataUser({
-            name: "",
-            username: "",
-            email: "",
-            role: "Member",
-          });
-          setErrorMessage({
-            name: "",
-            username: "",
-            email: "",
-          });
-          setTimeout(() => {
-            setAlletrVisible("hidden");
-          }, 4000);
-        }
-      })
-      .catch((error) => console.log(error));
+
+
+
   };
 
   return (
