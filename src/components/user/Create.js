@@ -4,7 +4,6 @@ import { createUser } from "../../server";
 
 const Create = (props) => {
   const [allertVisible, setAlletrVisible] = useState("hidden");
-  const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState({
     name: "",
     username: "",
@@ -17,33 +16,45 @@ const Create = (props) => {
     role: "Member",
   });
 
-  const addNewUser = () => {
-    if (
-      dataUser.name.length < 1 ||
-      dataUser.username.length < 1 ||
-      dataUser.email.length < 1
-    ) {
-      setError(true);
-      setErrorMessage({
-        name: "field required",
-        username: "field required",
-        email: "field required"
-      })
+  const validate = (value) => {
+    const regex = {
+      isEmail: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+      isAlpha: /^[_A-z0-9]*((-|\s)*[_A-z0-9])*$/g,
+    };
+
+    if (!value.name) {
+      setErrorMessage({ name: "field required" });
       return false;
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(dataUser.email)) {
-      setError(true);
-      setErrorMessage({...errorMessage, email: "must be a email"})
-      return false
-    } else if (!/^[_A-z0-9]*((-|\s)*[_A-z0-9])*$/g.test(dataUser.name || dataUser.username || dataUser.email)) {
-      setError(true)
-      setErrorMessage({
-        name: "only alphabet",
-        username: "only alphabet",
-        email: "only alphabet"
-      })
-      return false
+    } else if (!regex.isAlpha.test(value.name)) {
+      setErrorMessage({ name: "field only alphabet" });
+      return false;
     }
-    
+
+    if (!value.username) {
+      setErrorMessage({ username: "field required" });
+      return false;
+    } else if (!regex.isAlpha.test(value.username)) {
+      setErrorMessage({ username: "field only alphabet" });
+      return false;
+    }
+
+    if (!value.email) {
+      setErrorMessage({ email: "field required" });
+      return false;
+    } else if (!regex.isEmail.test(value.email)) {
+      setErrorMessage({ email: "field must be a email" });
+      return false;
+    }
+
+    return true;
+  };
+
+  const addNewUser = () => {
+    if (!validate(dataUser)) {
+      console.log("error ini");
+      return;
+    }
+
     createUser(dataUser)
       .then((result) => {
         if (result.status === 201) {
@@ -55,6 +66,11 @@ const Create = (props) => {
             username: "",
             email: "",
             role: "Member",
+          });
+          setErrorMessage({
+            name: "",
+            username: "",
+            email: "",
           });
           setTimeout(() => {
             setAlletrVisible("hidden");
@@ -89,7 +105,11 @@ const Create = (props) => {
                 email: "",
                 role: "Member",
               });
-              setError(false);
+              setErrorMessage({
+                name: "",
+                username: "",
+                email: "",
+              });
             }}
           />
           <Modal.Body>
@@ -104,19 +124,17 @@ const Create = (props) => {
                   </div>
                   <TextInput
                     id="name"
+                    name="name"
                     placeholder="input your name"
                     required={true}
-                    name="name"
                     value={dataUser.name}
                     onChange={(e) =>
                       setDataUser({ ...dataUser, name: e.target.value })
                     }
                   />
-                  {error && (
-                    <label className="text-red-600 text-sm">
-                      {errorMessage.name}
-                    </label>
-                  )}
+                  <label className="text-red-600 text-sm">
+                    {errorMessage.name}
+                  </label>
                 </div>
                 <div className="pb-5">
                   <div className="mb-2 block">
@@ -132,11 +150,9 @@ const Create = (props) => {
                       setDataUser({ ...dataUser, username: e.target.value })
                     }
                   />
-                  {error && (
-                    <label className="text-red-600 text-sm">
-                      {errorMessage.username}
-                    </label>
-                  )}
+                  <label className="text-red-600 text-sm">
+                    {errorMessage.username}
+                  </label>
                 </div>
                 <div className="pb-5">
                   <div className="mb-2 block">
@@ -151,11 +167,9 @@ const Create = (props) => {
                       setDataUser({ ...dataUser, email: e.target.value })
                     }
                   />
-                  {error && (
-                    <label className="text-red-600 text-sm">
-                      {errorMessage.email}
-                    </label>
-                  )}
+                  <label className="text-red-600 text-sm">
+                    {errorMessage.email}
+                  </label>
                 </div>
                 <div id="select" className="pb-5">
                   <div className="mb-2 block">
