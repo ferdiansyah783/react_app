@@ -18,7 +18,12 @@ const Create = (props) => {
   });
 
   const addNewUser = () => {
-    const validateData = validate(dataUser);
+    const rules = {
+      name: ['isRequired', 'isAlpha'],
+      username: ['isRequired', 'isAlpha'],
+      email: ['isRequired', 'isEmail']
+    }
+    const validateData = validate(dataUser, rules);
 
     if (Object.keys(validateData).length) {
       return setErrorMessage(validateData);
