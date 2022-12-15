@@ -1,9 +1,44 @@
 const regex = {
-    isEmail: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-    isAlpha: /^[_A-z0-9]*((-|\s)*[_A-z0-9])*$/,
+    isRequired: {
+        pattern: 'required',
+        error: 'field required'
+    },
+    isEmail: {
+        pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+        error: 'field must be a email'
+    },
+    isAlpha: {
+        pattern: /^[_A-z0-9]*((-|\s)*[_A-z0-9])*$/,
+        error: 'field only alphabet'
+    }
 };
 
-export const validate = (value) => {
+function rulesReader(value, rules) {
+
+    var _errorText = "";
+
+    for (var x = 0; x < rules.length; x++) {
+        if (rules[x] === 'isRequired' && !value) {
+
+            _errorText = regex[rules[x]]['error'];
+            break
+        }
+
+        if (rules[x] !== 'isRequired') {
+            const _test = regex[rules[x]]['pattern'].test(value);
+
+            _errorText = !_test ? regex[rules[x]]['error'] : "";
+
+            if (!_test) break;
+
+        }
+
+    }
+
+    return _errorText
+}
+
+export const validate = (value, rules) => {
 
     const _key = Object.keys(value);
 
@@ -11,34 +46,15 @@ export const validate = (value) => {
 
     for (var i = 0; i < _key.length; i++) {
 
-        // Validasi pertama kalau data kosong
+        if (!!rules[_key[i]]) {
 
-        if (!value[_key[i]]) {
-            _error[_key[i]] = 'field required';
-            break;
-        }
+            const testRule = rulesReader(value[_key[i]], rules[_key[i]]);
 
-        // validasi sesui pattern
+            if (!!testRule) {
+                _error[_key[i]] = testRule
+                break;
+            }
 
-        // name
-
-        if (_key[i] === 'name' && !regex.isAlpha.test(value.name)) {
-            _error[_key[i]] = 'field only alphabet';
-            break;
-        }
-
-        // username
-
-        if (_key[i] === 'username' && !regex.isAlpha.test(value.username)) {
-            _error[_key[i]] = 'field only alphabet';
-            break;
-        }
-
-        // email
-
-        if (_key[i] === 'email' && !regex.isEmail.test(value.email)) {
-            _error[_key[i]] = 'field must be a email';
-            break;
         }
 
     }
