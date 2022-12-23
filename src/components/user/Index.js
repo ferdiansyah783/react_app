@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { BiSearchAlt } from "react-icons/bi";
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { getAllUsers, searchUser, sortUser } from "../../server";
+import { getUsers } from "../../server";
 import Pagination from "../layout/Pagination";
 import Create from "./Create";
 import Delete from "./Delete";
@@ -14,10 +14,11 @@ const Index = () => {
   const [modalCreateVisible, setModalCreateVisible] = useState(false);
   const [modalUpdateVisible, setModalUpdateVisible] = useState(false);
   const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
-  const [activeRole, setActiveRole] = useState("All-Users");
-  const [filters, setFilters] = useState([]);
+  const [activeRole, setActiveRole] = useState("all-users");
+  // const [filters, setFilters] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(2);
+  const [totalPosts, setTotalPosts] = useState(0)
   const [callUser, setCallUser] = useState(false);
   const [query, setQuery] = useState("");
   const [dataUser, setDataUser] = useState({
@@ -26,70 +27,71 @@ const Index = () => {
     username: "",
     email: "",
     role: "",
-  })
+  });
 
   useEffect(() => {
-    getAllUsers(query)
+    getUsers(`_page=${currentPage}&_limit=${postsPerPage}&q=${query}&role=${activeRole}`)
       .then((result) => {
-        setUsers(result.data);
-        setFilters(result.data);
+        setTotalPosts(result?.headers['x-total-count'])
+        setUsers(result?.data?.data);
+        // setFilters(result?.data?.data);
       })
       .catch((err) => console.log(err));
-  }, [callUser, query]);
+  }, [callUser, query, currentPage, postsPerPage, activeRole]);
 
   const searchDataUser = (query) => {
     if (query !== null) {
       setQuery(query);
-      searchUser(query)
+      getUsers(`q=${query}`)
         .then((result) => {
-          const filter = result?.data.filter((user) =>
-            activeRole === "All-Users" ? user : user.role === activeRole
+          const filter = result?.data?.data.filter((user) =>
+            activeRole === "all-users" ? user : user.role === activeRole
           );
-          setFilters(filter);
+          setUsers(filter);
           setCurrentPage(1);
         })
         .catch((err) => console.log(err));
     } else {
-      getAllUsers();
+      getUsers();
       setCallUser((user) => !user);
     }
   };
 
   const sortDataUser = (query) => {
-    sortUser(query)
-      .then((result) => setUsers(result.data))
+    getUsers(`_sort=${query}`)
+      .then((result) => setUsers(result?.data?.data))
       .catch((err) => console.log(err));
   };
 
-  useEffect(() => {
-    const filter = users.filter((user) =>
-      activeRole === "All-Users" ? user : user.role === activeRole
-    );
-    setFilters(filter);
-  }, [activeRole, setFilters, users, setActiveRole]);
+  // useEffect(() => {
+  //   const filter = users.filter((user) =>
+  //     activeRole === "all-Users" ? user : user.role === activeRole
+  //   );
+  //   setFilters(filter);
+  // }, [activeRole, setFilters, users, setActiveRole]);
 
   const roles = [
     {
       id: 1,
-      name: "All-Users",
+      name: "all-users",
     },
     {
       id: 2,
-      name: "Member",
+      name: "member",
     },
     {
       id: 3,
-      name: "Admin",
+      name: "admin",
     },
     {
       id: 4,
-      name: "Team",
+      name: "team",
     },
   ];
 
-  const lastPostIndex = currentPage * postsPerPage;
-  const firstPostIndex = lastPostIndex - postsPerPage;
-  const currentPost = filters.slice(firstPostIndex, lastPostIndex);
+  // const lastPostIndex = currentPage * postsPerPage;
+  // const firstPostIndex = lastPostIndex - postsPerPage;
+  // const currentPost = filters.slice(firstPostIndex, lastPostIndex);
 
   return (
     <>
@@ -157,7 +159,7 @@ const Index = () => {
               >
                 <option value={""}>Sorting</option>
                 <option>name</option>
-                <option>username</option>
+                <option>title</option>
                 <option>email</option>
               </Select>
             </div>
@@ -194,22 +196,22 @@ const Index = () => {
               <thead className="bg-gray-50 text-left">
                 <tr>
                   <th className="w-[30%] pl-2 py-2">Name</th>
-                  <th className="w-[25%] py-2">Username</th>
+                  <th className="w-[25%] py-2">Title</th>
                   <th className="w-[25%] py-2">Email</th>
                   <th className="w-[10%] py-2">Role</th>
                   <th className="w-[10%] py-2 text-center">Option</th>
                 </tr>
               </thead>
               <tbody>
-                {currentPost.length < 1 ? (
+                {users.length < 1 ? (
                   <tr className="text-2xl font-normal">
                     <td className="p-5">Data Empty</td>
                   </tr>
                 ) : (
-                  currentPost.map((value, index) => (
+                  users.map((value, index) => (
                     <tr key={index} className="border-b-2">
                       <td className="w-[30%] pl-2 py-2">{value?.name}</td>
-                      <td className="w-[25%] py-2">{value?.username}</td>
+                      <td className="w-[25%] py-2">{value?.title}</td>
                       <td className="w-[25%] py-2">{value?.email}</td>
                       <td className="w-[10%] py-2">{value?.role}</td>
                       <td className="py-2 text-center">
@@ -219,10 +221,10 @@ const Index = () => {
                             setDataUser({
                               id: value?.id,
                               name: value?.name,
-                              username: value?.username,
+                              title: value?.title,
                               email: value?.email,
                               role: value?.role,
-                            })
+                            });
                           }}
                           className="mr-7 text-indigo-500"
                         >
@@ -231,7 +233,7 @@ const Index = () => {
                         <button
                           onClick={() => {
                             setModalDeleteVisible((visible) => !visible);
-                            setDataUser({...dataUser, id: value?.id})
+                            setDataUser({ ...dataUser, id: value?.id });
                           }}
                           className="text-red-600"
                         >
@@ -243,12 +245,19 @@ const Index = () => {
                 )}
               </tbody>
             </table>
-            <Pagination
-              totalPosts={filters.length}
-              postsPerPage={postsPerPage}
-              setCurrentPage={setCurrentPage}
-              currentPage={currentPage}
-            />
+            <div className="flex justify-between items-center">
+              <p className="font-light">showing 1 to 10 of <span className="font-semibold">{totalPosts}</span> results</p>
+              <div>
+                <button className={`border-2 p-1 px-3 ${currentPage === 1 ? 'bg-slate-500' : ''}`} disabled={currentPage === 1 ? true : false} onClick={() => setCurrentPage((page) => page -1)}>prev</button>
+                <Pagination
+                  totalPosts={totalPosts}
+                  postsPerPage={postsPerPage}
+                  setCurrentPage={setCurrentPage}
+                  currentPage={currentPage}
+                />
+                <button className="border-2 p-1 px-3" onClick={() => setCurrentPage((page) => page +1)}>next</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

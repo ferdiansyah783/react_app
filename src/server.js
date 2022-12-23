@@ -1,15 +1,15 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-    baseURL: `http://localhost:3001`,
+    baseURL: `https://rbthemes.com/api`,
     headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
     }
 });
 
-export const getAllUsers = async (query) => {
-    const users = await apiClient.get(`users?q=${query}`);
+export const getUsers = async (query) => {
+    const users = await apiClient.get(`users?${query}`);
     return users;
 }
 
@@ -18,15 +18,10 @@ export const getUser = async (id) => {
     return user
 }
 
-export const searchUser = async (query) => {
-    const user = await apiClient.get(`users?q=${query}`)
-    return user
-}
-
-export const sortUser = async (query) => {
-    const user = await apiClient.get(`users?_sort=${query}&_order=asc`)
-    return user
-}
+// export const sortUser = async (query) => {
+//     const user = await apiClient.get(`users?_sort=${query}&_order=asc`)
+//     return user
+// }
 
 export const createUser = async (data) => {
     const user = await apiClient.post(`users`, data);

@@ -7,20 +7,20 @@ const Create = (props) => {
   const [allertVisible, setAlletrVisible] = useState("hidden");
   const [errorMessage, setErrorMessage] = useState({
     name: "",
-    username: "",
+    title: "",
     email: "",
   });
   const [dataUser, setDataUser] = useState({
     name: "",
-    username: "",
+    title: "",
     email: "",
-    role: "Member",
+    role: "member",
   });
 
   const addNewUser = () => {
     const rules = {
       name: ['isRequired', 'isAlpha'],
-      username: ['isRequired', 'isAlpha'],
+      title: ['isRequired', 'isAlpha'],
       email: ['isRequired', 'isEmail']
     }
     const validateData = validate(dataUser, rules);
@@ -37,13 +37,13 @@ const Create = (props) => {
           setAlletrVisible("block");
           setDataUser({
             name: "",
-            username: "",
+            title: "",
             email: "",
-            role: "Member",
+            role: "member",
           });
           setErrorMessage({
             name: "",
-            username: "",
+            title: "",
             email: "",
           });
           setTimeout(() => {
@@ -75,13 +75,13 @@ const Create = (props) => {
               props.close();
               setDataUser({
                 name: "",
-                username: "",
+                title: "",
                 email: "",
-                role: "Member",
+                role: "member",
               });
               setErrorMessage({
                 name: "",
-                username: "",
+                title: "",
                 email: "",
               });
             }}
@@ -112,20 +112,20 @@ const Create = (props) => {
                 </div>
                 <div className="pb-5">
                   <div className="mb-2 block">
-                    <Label htmlFor="username" value="Your username" />
+                    <Label htmlFor="title" value="Your title" />
                   </div>
                   <TextInput
-                    id="username"
-                    name="username"
-                    placeholder="input your username"
+                    id="title"
+                    name="title"
+                    placeholder="input your title"
                     required={true}
-                    value={dataUser.username}
+                    value={dataUser.title}
                     onChange={(e) =>
-                      setDataUser({ ...dataUser, username: e.target.value })
+                      setDataUser({ ...dataUser, title: e.target.value })
                     }
                   />
                   <label className="text-red-600 text-sm">
-                    {errorMessage.username}
+                    {errorMessage.title}
                   </label>
                 </div>
                 <div className="pb-5">
@@ -157,9 +157,9 @@ const Create = (props) => {
                     id="roles"
                     required={true}
                   >
-                    <option>Member</option>
-                    <option>Admin</option>
-                    <option>Team</option>
+                    <option>member</option>
+                    <option>admin</option>
+                    <option>team</option>
                   </Select>
                 </div>
                 <div className="w-full">

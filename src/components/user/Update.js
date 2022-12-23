@@ -6,7 +6,7 @@ const Update = (props) => {
   const [dataUser, setDataUser] = useState({
     id: "",
     name: "",
-    username: "",
+    title: "",
     email: "",
     role: "",
   });
@@ -16,7 +16,7 @@ const Update = (props) => {
     setDataUser({
       id: props.user.id,
       name: props.user.name,
-      username: props.user.username,
+      title: props.user.title,
       email: props.user.email,
       role: props.user.role,
     });
@@ -75,15 +75,15 @@ const Update = (props) => {
               </div>
               <div>
                 <div className="mb-2 block">
-                  <Label htmlFor="username" value="Your username" />
+                  <Label htmlFor="title" value="Your title" />
                 </div>
                 <TextInput
-                  id="username"
-                  placeholder="input your username"
+                  id="title"
+                  placeholder="input your title"
                   required={true}
-                  value={dataUser.username}
+                  value={dataUser.title}
                   onChange={(e) =>
-                    setDataUser({ ...dataUser, username: e.target.value })
+                    setDataUser({ ...dataUser, title: e.target.value })
                   }
                 />
               </div>
@@ -113,9 +113,9 @@ const Update = (props) => {
                   id="countries"
                   required={true}
                 >
-                  <option>User</option>
-                  <option>Admin</option>
-                  <option>Team</option>
+                  <option>member</option>
+                  <option>admin</option>
+                  <option>team</option>
                 </Select>
               </div>
               <div className="w-full">
