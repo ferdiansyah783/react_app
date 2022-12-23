@@ -33,7 +33,7 @@ const Create = (props) => {
       .then((result) => {
         if (result.status === 201) {
           props.close();
-          props.setCallUser((data) => !data);
+          props.setRefreshPage()
           setAlletrVisible("block");
           setDataUser({
             name: "",

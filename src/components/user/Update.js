@@ -3,13 +3,7 @@ import React, { useEffect, useState } from "react";
 import { updateUser } from "../../server";
 
 const Update = (props) => {
-  const [dataUser, setDataUser] = useState({
-    id: "",
-    name: "",
-    title: "",
-    email: "",
-    role: "",
-  });
+  const [dataUser, setDataUser] = useState({});
   const [allertVisible, setAlletrVisible] = useState("hidden");
 
   useEffect(() => {
@@ -25,10 +19,10 @@ const Update = (props) => {
   const updateDataUser = () => {
     updateUser(dataUser)
       .then((result) => {
-        if (result.status === 200) {
+        if (result.status === 204) {
           props.close();
           setAlletrVisible("block");
-          props.setCallUser((user) => !user);
+          props.setRefreshPage();
           setTimeout(() => {
             setAlletrVisible("hidden");
           }, 4000);

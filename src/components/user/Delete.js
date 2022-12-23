@@ -15,8 +15,8 @@ const Delete = (props) => {
     deleteUser(userId)
       .then(() => {
         props.close()
-        props.setCallUser((callUser) => !callUser)
-        props.setCurrentPage(1)
+        props.setRefreshPage()
+        props.setCurrentPage()
         setAlletrVisible("block");
         setTimeout(() => {
           setAlletrVisible("hidden");

@@ -14,105 +14,140 @@ const Index = () => {
   const [modalCreateVisible, setModalCreateVisible] = useState(false);
   const [modalUpdateVisible, setModalUpdateVisible] = useState(false);
   const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
-  const [activeRole, setActiveRole] = useState("all-users");
-  // const [filters, setFilters] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(2);
-  const [totalPosts, setTotalPosts] = useState(0)
-  const [callUser, setCallUser] = useState(false);
-  const [query, setQuery] = useState("");
+  const [totalPosts, setTotalPosts] = useState(0);
+  const [refreshPage, setRefreshPage] = useState(false);
   const [dataUser, setDataUser] = useState({
     id: "",
     name: "",
-    username: "",
+    title: "",
     email: "",
     role: "",
   });
+  const [data, setData] = useState({
+    _page: 1,
+    _limit: 2,
+    role: "",
+    _sort: "",
+    q: "",
+  });
+
+  // queryBuilder
+  const availableQuery = [];
+
+  Object.keys(data).map((key) => {
+    if (data[key] !== "") {
+      availableQuery.push(key + "=" + data[key]);
+    }
+
+    return availableQuery;
+  });
+
+  const queryBuilder = availableQuery.join("&");
+
+  // filter
+  const rolesData = ["", "member", "admin", "team"];
+
+  const handleFilter = (role) => {
+    setData({ ...data, role: role, _page: 1 });
+  };
+
+  // limit
+  const limitsData = [2, 5, 10];
+
+  const handleLimit = (e) => {
+    setData({ ...data, _limit: e.target.value, _page: 1 });
+  };
+
+  // sort
+  const sortData = ["name", "title", "email", "role"];
+
+  const handleSort = (e) => {
+    setData({ ...data, _sort: e.target.value, _page: 1 });
+  };
+
+  // search
+  const handleSearch = (e) => {
+    setData({ ...data, q: e.target.value, _page: 1 });
+  };
+
+  /**
+   * pagination
+   * prev
+   * next
+   * reset page
+   * refresh page
+   */
+  const handlePage = (e) => {
+    setData({ ...data, _page: e });
+  };
+
+  const handlePrev = () => {
+    setData({ ...data, _page: data._page - 1 });
+  };
+
+  const handleNext = () => {
+    setData({ ...data, _page: data._page + 1 });
+  };
+
+  const handleResetPage = () => {
+    setData({ ...data, _page: 1 });
+  };
+
+  const handleRefreshpage = () => {
+    setRefreshPage((refreshPage) => !refreshPage);
+  };
+
+  // handle update
+  const handleUpdate = (value) => {
+    setModalUpdateVisible((visible) => !visible);
+    setDataUser({
+      id: value?.id,
+      name: value?.name,
+      title: value?.title,
+      email: value?.email,
+      role: value?.role,
+    });
+  };
+
+  // handle delete
+  const handleDelete = (value) => {
+    setModalDeleteVisible((visible) => !visible);
+    setDataUser({ ...dataUser, id: value?.id });
+  };
 
   useEffect(() => {
-    getUsers(`_page=${currentPage}&_limit=${postsPerPage}&q=${query}&role=${activeRole}`)
+    console.log(queryBuilder);
+    getUsers(queryBuilder)
       .then((result) => {
-        setTotalPosts(result?.headers['x-total-count'])
+        setTotalPosts(result?.headers["x-total-count"]);
         setUsers(result?.data?.data);
-        // setFilters(result?.data?.data);
       })
       .catch((err) => console.log(err));
-  }, [callUser, query, currentPage, postsPerPage, activeRole]);
-
-  const searchDataUser = (query) => {
-    if (query !== null) {
-      setQuery(query);
-      getUsers(`q=${query}`)
-        .then((result) => {
-          const filter = result?.data?.data.filter((user) =>
-            activeRole === "all-users" ? user : user.role === activeRole
-          );
-          setUsers(filter);
-          setCurrentPage(1);
-        })
-        .catch((err) => console.log(err));
-    } else {
-      getUsers();
-      setCallUser((user) => !user);
-    }
-  };
-
-  const sortDataUser = (query) => {
-    getUsers(`_sort=${query}`)
-      .then((result) => setUsers(result?.data?.data))
-      .catch((err) => console.log(err));
-  };
-
-  // useEffect(() => {
-  //   const filter = users.filter((user) =>
-  //     activeRole === "all-Users" ? user : user.role === activeRole
-  //   );
-  //   setFilters(filter);
-  // }, [activeRole, setFilters, users, setActiveRole]);
-
-  const roles = [
-    {
-      id: 1,
-      name: "all-users",
-    },
-    {
-      id: 2,
-      name: "member",
-    },
-    {
-      id: 3,
-      name: "admin",
-    },
-    {
-      id: 4,
-      name: "team",
-    },
-  ];
-
-  // const lastPostIndex = currentPage * postsPerPage;
-  // const firstPostIndex = lastPostIndex - postsPerPage;
-  // const currentPost = filters.slice(firstPostIndex, lastPostIndex);
+  }, [refreshPage, queryBuilder]);
 
   return (
     <>
       <Create
         show={modalCreateVisible}
         close={() => setModalCreateVisible((visible) => !visible)}
-        setCallUser={setCallUser}
+        setRefreshPage={handleRefreshpage}
       />
+
       <Update
         show={modalUpdateVisible}
         close={() => setModalUpdateVisible((visible) => !visible)}
         user={dataUser}
-        setCallUser={setCallUser}
+        setRefreshPage={handleRefreshpage}
       />
+
       <Delete
         show={modalDeleteVisible}
         close={() => setModalDeleteVisible((visible) => !visible)}
         user={dataUser}
-        setCallUser={setCallUser}
-        setCurrentPage={setCurrentPage}
+        setRefreshPage={handleRefreshpage}
+        setCurrentPage={handleResetPage}
       />
+
       <div className="min-w-full h-full p-5">
         <div className="flex items-center justify-between mb-2">
           <div className="font-semibold text-2xl ml-6">Manage User</div>
@@ -132,35 +167,36 @@ const Index = () => {
             <input
               placeholder="search"
               className="outline-none ml-2 w-full"
-              onChange={(e) => searchDataUser(e.target.value)}
+              onChange={(e) => handleSearch(e)}
             />
           </div>
+
           <div className="flex items-center">
             <div>
               <Select
                 required={true}
                 className="w-[55px]"
-                onChange={(e) => {
-                  setPostsPerPage(e.target.value);
-                  setCurrentPage(1);
-                }}
+                onChange={(e) => handleLimit(e)}
               >
-                <option>2</option>
-                <option>5</option>
-                <option>10</option>
+                {limitsData.map((data, index) => (
+                  <option key={index}>{data}</option>
+                ))}
               </Select>
             </div>
+
             <div className="ml-3">
               <Select
                 required={true}
                 className="w-[85px] outline-none"
                 style={{ backgroundColor: "transparent" }}
-                onChange={(e) => sortDataUser(e.target.value)}
+                onChange={(e) => handleSort(e)}
               >
-                <option value={""}>Sorting</option>
-                <option>name</option>
-                <option>title</option>
-                <option>email</option>
+                <option value={""}>sorting</option>
+                {sortData.map((data, index) => (
+                  <option key={index} value={data}>
+                    {data}
+                  </option>
+                ))}
               </Select>
             </div>
           </div>
@@ -170,22 +206,19 @@ const Index = () => {
           <div className="w-1/5 px-8">
             <fieldset className="flex flex-col gap-4" id="radio">
               <legend className="pb-6 font-semibold">Choose your role</legend>
-              {roles.map((role) => (
+              {rolesData.map((role, index) => (
                 <div
-                  onClick={() => {
-                    setActiveRole(role.name);
-                    setCurrentPage(1);
-                  }}
-                  key={role.id}
+                  onClick={() => handleFilter(role)}
+                  key={index}
                   className="flex items-center gap-2"
                 >
                   <Radio
-                    id={role.name}
+                    id={role}
                     name="roles"
-                    value={role.name}
-                    defaultChecked={activeRole === role.name && true}
+                    value={role}
+                    defaultChecked={data.role === role && true}
                   />
-                  <Label htmlFor={role.name}>{role.name}</Label>
+                  <Label htmlFor={role}>{role}</Label>
                 </div>
               ))}
             </fieldset>
@@ -216,25 +249,13 @@ const Index = () => {
                       <td className="w-[10%] py-2">{value?.role}</td>
                       <td className="py-2 text-center">
                         <button
-                          onClick={() => {
-                            setModalUpdateVisible((visible) => !visible);
-                            setDataUser({
-                              id: value?.id,
-                              name: value?.name,
-                              title: value?.title,
-                              email: value?.email,
-                              role: value?.role,
-                            });
-                          }}
+                          onClick={() => handleUpdate(value)}
                           className="mr-7 text-indigo-500"
                         >
                           <FaEdit className="text-xl" />
                         </button>
                         <button
-                          onClick={() => {
-                            setModalDeleteVisible((visible) => !visible);
-                            setDataUser({ ...dataUser, id: value?.id });
-                          }}
+                          onClick={() => handleDelete(value)}
                           className="text-red-600"
                         >
                           <RiDeleteBin6Line className="text-xl" />
@@ -245,17 +266,31 @@ const Index = () => {
                 )}
               </tbody>
             </table>
+
             <div className="flex justify-between items-center">
-              <p className="font-light">showing 1 to 10 of <span className="font-semibold">{totalPosts}</span> results</p>
+              <p className="font-light">
+                showing 1 to 10 of{" "}
+                <span className="font-semibold">{totalPosts}</span> results
+              </p>
               <div>
-                <button className={`border-2 p-1 px-3 ${currentPage === 1 ? 'bg-slate-500' : ''}`} disabled={currentPage === 1 ? true : false} onClick={() => setCurrentPage((page) => page -1)}>prev</button>
+                <button
+                  className={`border-2 p-1 px-3 ${
+                    data._page === 1 ? "bg-slate-500" : ""
+                  }`}
+                  disabled={data._page === 1 ? true : false}
+                  onClick={handlePrev}
+                >
+                  prev
+                </button>
                 <Pagination
                   totalPosts={totalPosts}
-                  postsPerPage={postsPerPage}
-                  setCurrentPage={setCurrentPage}
-                  currentPage={currentPage}
+                  postsPerPage={data._limit}
+                  setCurrentPage={handlePage}
+                  currentPage={data._page}
                 />
-                <button className="border-2 p-1 px-3" onClick={() => setCurrentPage((page) => page +1)}>next</button>
+                <button className="border-2 p-1 px-3" onClick={handleNext}>
+                  next
+                </button>
               </div>
             </div>
           </div>
