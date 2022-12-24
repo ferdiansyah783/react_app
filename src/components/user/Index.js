@@ -220,7 +220,9 @@ const Index = () => {
                     id={role}
                     name="roles"
                     value={role}
-                    defaultChecked={(data.role === role || role === "all-users") && true}
+                    defaultChecked={
+                      (data.role === role || role === "all-users") && true
+                    }
                   />
                   <Label htmlFor={role}>{role}</Label>
                 </div>
@@ -277,24 +279,14 @@ const Index = () => {
                 <span className="font-semibold">{totalPosts}</span> results
               </p>
               <div>
-                <button
-                  className={`border-2 p-1 px-3 ${
-                    data._page === 1 ? "bg-slate-500" : ""
-                  }`}
-                  disabled={data._page === 1 ? true : false}
-                  onClick={handlePrev}
-                >
-                  prev
-                </button>
                 <Pagination
                   totalPosts={totalPosts}
                   postsPerPage={data._limit}
                   setCurrentPage={handlePage}
                   currentPage={data._page}
+                  handlePrev={handlePrev}
+                  handleNext={handleNext}
                 />
-                <button className="border-2 p-1 px-3" onClick={handleNext}>
-                  next
-                </button>
               </div>
             </div>
           </div>

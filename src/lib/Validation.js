@@ -8,7 +8,7 @@ const regex = {
         error: 'field must be a email'
     },
     isAlpha: {
-        pattern: /^[_A-z0-9]*((-|\s)*[_A-z0-9])*$/,
+        pattern: /^[_A-z]*((-|\s)*[_A-z])*$/,
         error: 'field only alphabet'
     }
 };

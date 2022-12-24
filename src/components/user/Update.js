@@ -1,11 +1,52 @@
 import { Alert, Button, Label, Modal, Select, TextInput } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { updateUser } from "../../server";
+import { validate } from "../../lib/Validation";
 
 const Update = (props) => {
   const [dataUser, setDataUser] = useState({});
   const [allertVisible, setAlletrVisible] = useState("hidden");
+  const [errorMessage, setErrorMessage] = useState({
+    name: "",
+    title: "",
+    email: "",
+  });
 
+  // data role
+  const rolesData = ["member", "admin", "team"];
+
+  // data input
+  const inputData = [
+    {
+      id: "name",
+      name: "name",
+      placeholder: "input your name",
+      label: "your name",
+      value: dataUser.name,
+      errorMessage: errorMessage.name,
+      onChange: (e) => setDataUser({ ...dataUser, name: e.target.value }),
+    },
+    {
+      id: "title",
+      name: "title",
+      placeholder: "input your title",
+      label: "your title",
+      value: dataUser.title,
+      errorMessage: errorMessage.title,
+      onChange: (e) => setDataUser({ ...dataUser, title: e.target.value }),
+    },
+    {
+      id: "email",
+      name: "email",
+      placeholder: "name@company.com",
+      label: "your email",
+      value: dataUser.email,
+      errorMessage: errorMessage.email,
+      onChange: (e) => setDataUser({ ...dataUser, email: e.target.value }),
+    },
+  ];
+
+  // useEffect
   useEffect(() => {
     setDataUser({
       id: props.user.id,
@@ -16,7 +57,19 @@ const Update = (props) => {
     });
   }, [props]);
 
+  // update user
   const updateDataUser = () => {
+    const rules = {
+      name: ["isRequired", "isAlpha"],
+      title: ["isRequired", "isAlpha"],
+      email: ["isRequired", "isEmail"],
+    };
+    const validateData = validate(dataUser, rules);
+
+    if (Object.keys(validateData).length) {
+      return setErrorMessage(validateData);
+    }
+
     updateUser(dataUser)
       .then((result) => {
         if (result.status === 204) {
@@ -53,48 +106,24 @@ const Update = (props) => {
               <h3 className="text-xl font-medium text-gray-900 dark:text-white">
                 Update user
               </h3>
-              <div>
-                <div className="mb-2 block">
-                  <Label htmlFor="name" value="Your name" />
+              {inputData.map((value, index) => (
+                <div key={index}>
+                  <div className="mb-2 block">
+                    <Label htmlFor={value.name} value={value.label} />
+                  </div>
+                  <TextInput
+                    id={value.name}
+                    name={value.name}
+                    placeholder={value.placeholder}
+                    value={value.value}
+                    onChange={(e) => value.onChange(e)}
+                  />
+                  <label className="text-red-600 text-sm">
+                    {value.errorMessage}
+                  </label>
                 </div>
-                <TextInput
-                  id="name"
-                  placeholder="input your name"
-                  required={true}
-                  value={dataUser.name}
-                  onChange={(e) =>
-                    setDataUser({ ...dataUser, name: e.target.value })
-                  }
-                />
-              </div>
-              <div>
-                <div className="mb-2 block">
-                  <Label htmlFor="title" value="Your title" />
-                </div>
-                <TextInput
-                  id="title"
-                  placeholder="input your title"
-                  required={true}
-                  value={dataUser.title}
-                  onChange={(e) =>
-                    setDataUser({ ...dataUser, title: e.target.value })
-                  }
-                />
-              </div>
-              <div>
-                <div className="mb-2 block">
-                  <Label htmlFor="email" value="Your email" />
-                </div>
-                <TextInput
-                  id="email"
-                  placeholder="name@company.com"
-                  required={true}
-                  value={dataUser.email}
-                  onChange={(e) =>
-                    setDataUser({ ...dataUser, email: e.target.value })
-                  }
-                />
-              </div>
+              ))}
+
               <div id="select">
                 <div className="mb-2 block">
                   <Label htmlFor="countries" value="Select your role" />
@@ -105,13 +134,13 @@ const Update = (props) => {
                     setDataUser({ ...dataUser, role: e.target.value })
                   }
                   id="countries"
-                  required={true}
                 >
-                  <option>member</option>
-                  <option>admin</option>
-                  <option>team</option>
+                  {rolesData.map((role, index) => (
+                    <option key={index}>{role}</option>
+                  ))}
                 </Select>
               </div>
+
               <div className="w-full">
                 <Button onClick={updateDataUser}>Save</Button>
               </div>

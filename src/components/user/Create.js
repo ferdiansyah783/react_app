@@ -17,12 +17,59 @@ const Create = (props) => {
     role: "member",
   });
 
+  // data role
+  const rolesData = ["member", "admin", "team"];
+
+  // data input
+  const inputData = [
+    {
+      id: "name",
+      name: "name",
+      placeholder: "input your name",
+      label: "your name",
+      value: dataUser.name,
+      errorMessage: errorMessage.name,
+      onChange: (e) => setDataUser({ ...dataUser, name: e.target.value }),
+    },
+    {
+      id: "title",
+      name: "title",
+      placeholder: "input your title",
+      label: "your title",
+      value: dataUser.title,
+      errorMessage: errorMessage.title,
+      onChange: (e) => setDataUser({ ...dataUser, title: e.target.value }),
+    },
+    {
+      id: "email",
+      name: "email",
+      placeholder: "name@company.com",
+      label: "your email",
+      value: dataUser.email,
+      errorMessage: errorMessage.email,
+      onChange: (e) => setDataUser({ ...dataUser, email: e.target.value }),
+    },
+  ];
+
+  // handle modal header
+  const handleModalHeader = () => {
+    props.close();
+    setDataUser({
+      name: "",
+      title: "",
+      email: "",
+      role: "member",
+    });
+    setErrorMessage({});
+  };
+
+  // add user
   const addNewUser = () => {
     const rules = {
-      name: ['isRequired', 'isAlpha'],
-      title: ['isRequired', 'isAlpha'],
-      email: ['isRequired', 'isEmail']
-    }
+      name: ["isRequired", "isAlpha"],
+      title: ["isRequired", "isAlpha"],
+      email: ["isRequired", "isEmail"],
+    };
     const validateData = validate(dataUser, rules);
 
     if (Object.keys(validateData).length) {
@@ -33,7 +80,7 @@ const Create = (props) => {
       .then((result) => {
         if (result.status === 201) {
           props.close();
-          props.setRefreshPage()
+          props.setRefreshPage();
           setAlletrVisible("block");
           setDataUser({
             name: "",
@@ -41,11 +88,7 @@ const Create = (props) => {
             email: "",
             role: "member",
           });
-          setErrorMessage({
-            name: "",
-            title: "",
-            email: "",
-          });
+          setErrorMessage({});
           setTimeout(() => {
             setAlletrVisible("hidden");
           }, 4000);
@@ -70,81 +113,31 @@ const Create = (props) => {
       {/* modal */}
       <React.Fragment>
         <Modal show={props.show} size="lg" popup={true}>
-          <Modal.Header
-            onClick={() => {
-              props.close();
-              setDataUser({
-                name: "",
-                title: "",
-                email: "",
-                role: "member",
-              });
-              setErrorMessage({
-                name: "",
-                title: "",
-                email: "",
-              });
-            }}
-          />
+          <Modal.Header onClick={handleModalHeader} />
           <Modal.Body>
             <div className="space-y-6 px-6 pb-4 sm:pb-6 lg:px-8 xl:pb-8">
               <h3 className="text-xl font-medium text-gray-900 dark:text-white">
                 Add new user
               </h3>
               <form id="form-input">
-                <div className="pb-5">
-                  <div className="mb-2 block">
-                    <Label htmlFor="name" value="Your name" />
+                {inputData.map((value, index) => (
+                  <div className="pb-5" key={index}>
+                    <div className="mb-2 block">
+                      <Label htmlFor={value.name} value={value.label} />
+                    </div>
+                    <TextInput
+                      id={value.name}
+                      name={value.name}
+                      placeholder={value.placeholder}
+                      value={value.value}
+                      onChange={(e) => value.onChange(e)}
+                    />
+                    <label className="text-red-600 text-sm">
+                      {value.errorMessage}
+                    </label>
                   </div>
-                  <TextInput
-                    id="name"
-                    name="name"
-                    placeholder="input your name"
-                    required={true}
-                    value={dataUser.name}
-                    onChange={(e) =>
-                      setDataUser({ ...dataUser, name: e.target.value })
-                    }
-                  />
-                  <label className="text-red-600 text-sm">
-                    {errorMessage.name}
-                  </label>
-                </div>
-                <div className="pb-5">
-                  <div className="mb-2 block">
-                    <Label htmlFor="title" value="Your title" />
-                  </div>
-                  <TextInput
-                    id="title"
-                    name="title"
-                    placeholder="input your title"
-                    required={true}
-                    value={dataUser.title}
-                    onChange={(e) =>
-                      setDataUser({ ...dataUser, title: e.target.value })
-                    }
-                  />
-                  <label className="text-red-600 text-sm">
-                    {errorMessage.title}
-                  </label>
-                </div>
-                <div className="pb-5">
-                  <div className="mb-2 block">
-                    <Label htmlFor="email" value="Your email" />
-                  </div>
-                  <TextInput
-                    id="email"
-                    placeholder="name@company.com"
-                    required={true}
-                    value={dataUser.email}
-                    onChange={(e) =>
-                      setDataUser({ ...dataUser, email: e.target.value })
-                    }
-                  />
-                  <label className="text-red-600 text-sm">
-                    {errorMessage.email}
-                  </label>
-                </div>
+                ))}
+
                 <div id="select" className="pb-5">
                   <div className="mb-2 block">
                     <Label htmlFor="roles" value="Select your role" />
@@ -155,13 +148,13 @@ const Create = (props) => {
                       setDataUser({ ...dataUser, role: e.target.value })
                     }
                     id="roles"
-                    required={true}
                   >
-                    <option>member</option>
-                    <option>admin</option>
-                    <option>team</option>
+                    {rolesData.map((role, index) => (
+                      <option key={index}>{role}</option>
+                    ))}
                   </Select>
                 </div>
+
                 <div className="w-full">
                   <Button onClick={addNewUser}>Save</Button>
                 </div>

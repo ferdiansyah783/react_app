@@ -9,28 +9,19 @@ const apiClient = axios.create({
 });
 
 export const getUsers = async (query) => {
-    const users = await apiClient.get(`users?${query}`);
-    return users;
+    return await apiClient.get(`users?${query}`);
 }
 
 export const getUser = async (id) => {
-    const user =  await apiClient.get(`users/${id}`)
-    return user
+    return await apiClient.get(`users/${id}`)
 }
 
-// export const sortUser = async (query) => {
-//     const user = await apiClient.get(`users?_sort=${query}&_order=asc`)
-//     return user
-// }
-
 export const createUser = async (data) => {
-    const user = await apiClient.post(`users`, data);
-    return user
+    return await apiClient.post(`users`, data);
 }
 
 export const updateUser = async (data) => {
-    const user = await apiClient.put(`users/${data.id}`, data);
-    return user
+    return await apiClient.put(`users/${data.id}`, data);
 }
 
 export const deleteUser = async (id) => {
