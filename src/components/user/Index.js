@@ -115,6 +115,7 @@ const Index = () => {
     setDataUser({ ...dataUser, id: value?.id });
   };
 
+  // useeffect
   useEffect(() => {
     console.log(queryBuilder);
     getUsers(queryBuilder)
@@ -218,7 +219,9 @@ const Index = () => {
                     value={role}
                     defaultChecked={data.role === role && true}
                   />
-                  <Label htmlFor={role}>{role}</Label>
+                  <Label htmlFor={role}>
+                    {role === "" ? "all-users" : role}
+                  </Label>
                 </div>
               ))}
             </fieldset>
