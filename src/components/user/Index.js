@@ -11,11 +11,13 @@ import Update from "./Update";
 
 const Index = () => {
   const [users, setUsers] = useState([]);
-  const [modalCreateVisible, setModalCreateVisible] = useState(false);
-  const [modalUpdateVisible, setModalUpdateVisible] = useState(false);
-  const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
   const [totalPosts, setTotalPosts] = useState(0);
   const [refreshPage, setRefreshPage] = useState(false);
+  const [modalVisible, setModalVisible] = useState({
+    create: false,
+    update: false,
+    delete: false,
+  });
   const [dataUser, setDataUser] = useState({
     id: "",
     name: "",
@@ -99,7 +101,7 @@ const Index = () => {
 
   // handle update
   const handleUpdate = (value) => {
-    setModalUpdateVisible((visible) => !visible);
+    setModalVisible({ ...modalVisible, update: true });
     setDataUser({
       id: value?.id,
       name: value?.name,
@@ -111,7 +113,7 @@ const Index = () => {
 
   // handle delete
   const handleDelete = (value) => {
-    setModalDeleteVisible((visible) => !visible);
+    setModalVisible({ ...modalVisible, delete: true });
     setDataUser({ ...dataUser, id: value?.id });
   };
 
@@ -126,24 +128,26 @@ const Index = () => {
       .catch((err) => console.log(err));
   }, [refreshPage, queryBuilder]);
 
+  console.log(modalVisible);
+
   return (
     <>
       <Create
-        show={modalCreateVisible}
-        close={() => setModalCreateVisible((visible) => !visible)}
+        show={modalVisible.create}
+        close={() => setModalVisible({ ...modalVisible, create: false })}
         setRefreshPage={handleRefreshpage}
       />
 
       <Update
-        show={modalUpdateVisible}
-        close={() => setModalUpdateVisible((visible) => !visible)}
+        show={modalVisible.update}
+        close={() => setModalVisible({ ...modalVisible, update: false })}
         user={dataUser}
         setRefreshPage={handleRefreshpage}
       />
 
       <Delete
-        show={modalDeleteVisible}
-        close={() => setModalDeleteVisible((visible) => !visible)}
+        show={modalVisible.delete}
+        close={() => setModalVisible({ ...modalVisible, delete: false })}
         user={dataUser}
         setRefreshPage={handleRefreshpage}
         setCurrentPage={handleResetPage}
@@ -154,7 +158,7 @@ const Index = () => {
           <div className="font-semibold text-2xl ml-6">Manage User</div>
           <div className="">
             <button
-              onClick={() => setModalCreateVisible((visible) => !visible)}
+              onClick={() => setModalVisible({ ...modalVisible, create: true })}
               className="bg-indigo-600 text-white p-2 rounded-md px-3"
             >
               Add User
