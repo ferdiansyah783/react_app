@@ -47,10 +47,12 @@ const Index = () => {
   const queryBuilder = availableQuery.join("&");
 
   // filter
-  const rolesData = ["", "member", "admin", "team"];
+  const rolesData = ["all-users", "member", "admin", "team"];
 
   const handleFilter = (role) => {
-    setData({ ...data, role: role, _page: 1 });
+    role === "all-users"
+      ? setData({ ...data, role: "", _page: 1 })
+      : setData({ ...data, role: role, _page: 1 });
   };
 
   // limit
@@ -119,7 +121,6 @@ const Index = () => {
 
   // useeffect
   useEffect(() => {
-    console.log(queryBuilder);
     getUsers(queryBuilder)
       .then((result) => {
         setTotalPosts(result?.headers["x-total-count"]);
@@ -127,8 +128,6 @@ const Index = () => {
       })
       .catch((err) => console.log(err));
   }, [refreshPage, queryBuilder]);
-
-  console.log(modalVisible);
 
   return (
     <>
@@ -221,11 +220,9 @@ const Index = () => {
                     id={role}
                     name="roles"
                     value={role}
-                    defaultChecked={data.role === role && true}
+                    defaultChecked={(data.role === role || role === "all-users") && true}
                   />
-                  <Label htmlFor={role}>
-                    {role === "" ? "all-users" : role}
-                  </Label>
+                  <Label htmlFor={role}>{role}</Label>
                 </div>
               ))}
             </fieldset>
