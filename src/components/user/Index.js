@@ -273,22 +273,14 @@ const Index = () => {
               </tbody>
             </table>
 
-            <div className="flex justify-between items-center">
-              <p className="font-light">
-                showing 1 to 10 of{" "}
-                <span className="font-semibold">{totalPosts}</span> results
-              </p>
-              <div>
-                <Pagination
-                  totalPosts={totalPosts}
-                  postsPerPage={data._limit}
-                  setCurrentPage={handlePage}
-                  currentPage={data._page}
-                  handlePrev={handlePrev}
-                  handleNext={handleNext}
-                />
-              </div>
-            </div>
+            <Pagination
+              totalPosts={totalPosts}
+              postsPerPage={data._limit}
+              setCurrentPage={handlePage}
+              currentPage={data._page}
+              handlePrev={handlePrev}
+              handleNext={handleNext}
+            />
           </div>
         </div>
       </div>
