@@ -273,14 +273,18 @@ const Index = () => {
               </tbody>
             </table>
 
-            <Pagination
-              totalPosts={totalPosts}
-              postsPerPage={data._limit}
-              setCurrentPage={handlePage}
-              currentPage={data._page}
-              handlePrev={handlePrev}
-              handleNext={handleNext}
-            />
+            {users.length < 1 ? (
+              <></>
+            ) : (
+              <Pagination
+                totalPosts={totalPosts}
+                postsPerPage={data._limit}
+                setCurrentPage={handlePage}
+                currentPage={data._page}
+                handlePrev={handlePrev}
+                handleNext={handleNext}
+              />
+            )}
           </div>
         </div>
       </div>

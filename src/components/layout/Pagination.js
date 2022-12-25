@@ -1,11 +1,18 @@
 import React from "react";
 
 const Pagination = (props) => {
-  // pagination
+  // last page
   const lastPage = Math.ceil(props.totalPosts / props.postsPerPage);
-  const startIndex = (props.currentPage - 1) * props.postsPerPage + 1;
-  const endIndex = props.currentPage * props.postsPerPage;
 
+  // startIndex
+  const startIndex = (props.currentPage - 1) * props.postsPerPage + 1;
+
+  // endIndex
+  const data = startIndex + parseInt(props.postsPerPage) - 1;
+  const endIndex =
+    data > props.totalPosts ? data - (data - props.totalPosts) : data;
+
+  // pagination
   const paginate = (data, limit, current, adjacents) => {
     let _result = [];
 

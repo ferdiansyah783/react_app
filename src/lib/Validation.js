@@ -10,6 +10,10 @@ const regex = {
     isAlpha: {
         pattern: /^[_A-z]*((-|\s)*[_A-z])*$/,
         error: 'field only alphabet'
+    },
+    minChar: {
+        pattern: /^.{3,}/,
+        error: 'field min 3 character'
     }
 };
 

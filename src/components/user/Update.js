@@ -60,8 +60,8 @@ const Update = (props) => {
   // update user
   const updateDataUser = () => {
     const rules = {
-      name: ["isRequired", "isAlpha"],
-      title: ["isRequired", "isAlpha"],
+      name: ["isRequired", "isAlpha", "minChar"],
+      title: ["isRequired", "isAlpha", "minChar"],
       email: ["isRequired", "isEmail"],
     };
     const validateData = validate(dataUser, rules);
