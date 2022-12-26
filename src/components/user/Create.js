@@ -101,7 +101,7 @@ const Create = (props) => {
     <>
       {/* alert */}
       <Alert
-        className={`${allertVisible} absolute top-0 right-0 left-0 w-2/4 mx-auto`}
+        className={`${allertVisible} absolute top-0 right-0 left-0 w-full xl:w-2/4 mx-auto`}
         color="success"
       >
         <span>

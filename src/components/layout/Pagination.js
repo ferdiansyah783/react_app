@@ -57,8 +57,8 @@ const Pagination = (props) => {
 
   return (
     <>
-      <div className="flex justify-between items-center">
-        <p className="font-light">
+      <div className="flex justify-center xl:justify-between items-center">
+        <p className="hidden xl:block font-light">
           showing <span className="font-semibold">{startIndex}</span> to{" "}
           <span className="font-semibold">{endIndex}</span> of{" "}
           <span className="font-semibold">{props.totalPosts}</span> results
@@ -77,7 +77,9 @@ const Pagination = (props) => {
             <button
               key={index}
               onClick={() => props.setCurrentPage(value)}
-              className={`border px-3 py-1 rounded-md ${
+              className={`border ${
+                props.currentPage > 9 ? "px-2 xl:px-3 py-1" : ""
+              } px-3 py-1 rounded-md ${
                 props.currentPage === value
                   ? "active bg-indigo-600 text-white"
                   : ""

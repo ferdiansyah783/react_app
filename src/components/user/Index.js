@@ -152,21 +152,29 @@ const Index = () => {
         setCurrentPage={handleResetPage}
       />
 
-      <div className="min-w-full h-full p-5">
-        <div className="flex items-center justify-between mb-2">
-          <div className="font-semibold text-2xl ml-6">Manage User</div>
-          <div className="">
+      <div className="min-w-full h-full xl:p-5">
+        <div className="xl:flex xl:items-center xl:justify-between mb-5">
+          <div className="xl:ml-6">
+            <h1 className="font-semibold text-xl xl:text-2xl mb-2">
+              Manage User
+            </h1>
+            <p className="text-sm">
+              A list of all the users in your account including their name,
+              title, email and role.
+            </p>
+          </div>
+          <div className="mt-3">
             <button
               onClick={() => setModalVisible({ ...modalVisible, create: true })}
-              className="bg-indigo-600 text-white p-2 rounded-md px-3"
+              className="bg-indigo-600 text-white py-2 rounded-md px-4 text-sm font-semibold"
             >
               Add User
             </button>
           </div>
         </div>
 
-        <div className="flex justify-between items-center">
-          <div className="flex items-center p-2 border-2 rounded-md w-1/4 ml-[20%]">
+        <div className="xl:flex xl:justify-between items-center">
+          <div className="flex items-center p-2 border-2 rounded-md min-w-full xl:min-w-0 xl:w-1/4 xl:ml-[20%] border-indigo-300 mb-3 xl:mb-0">
             <BiSearchAlt className="text-xl" />
             <input
               placeholder="search"
@@ -175,15 +183,25 @@ const Index = () => {
             />
           </div>
 
-          <div className="flex items-center">
-            <div>
+          <div className="flex items-center justify-end">
+            <div className="">
               <Select
                 required={true}
-                className="w-[55px]"
-                onChange={(e) => handleLimit(e)}
+                className="w-24"
+                style={{
+                  backgroundColor: "transparent",
+                  border: "none",
+                  outline: "none",
+                }}
+                onChange={(e) => handleSort(e)}
               >
-                {limitsData.map((data, index) => (
-                  <option key={index}>{data}</option>
+                <option value={""} className="border-none">
+                  sorting
+                </option>
+                {sortData.map((data, index) => (
+                  <option key={index} value={data} className="border-none">
+                    {data}
+                  </option>
                 ))}
               </Select>
             </div>
@@ -191,25 +209,24 @@ const Index = () => {
             <div className="ml-3">
               <Select
                 required={true}
-                className="w-[85px] outline-none"
-                style={{ backgroundColor: "transparent" }}
-                onChange={(e) => handleSort(e)}
+                className="w-20"
+                onChange={(e) => handleLimit(e)}
+                style={{ backgroundColor: "transparent", outline: "none" }}
               >
-                <option value={""}>sorting</option>
-                {sortData.map((data, index) => (
-                  <option key={index} value={data}>
-                    {data}
-                  </option>
+                {limitsData.map((data, index) => (
+                  <option key={index}>{data}</option>
                 ))}
               </Select>
             </div>
           </div>
         </div>
 
-        <div className="mt-7 min-w-full flex">
-          <div className="w-1/5 px-8">
-            <fieldset className="flex flex-col gap-4" id="radio">
-              <legend className="pb-6 font-semibold">Choose your role</legend>
+        <div className="mt-7 min-w-full xl:flex">
+          <div className="w-full xl:w-1/5 xl:px-8 mb-7 xl:mb-0">
+            <fieldset className="flex xl:flex-col gap-4" id="radio">
+              <legend className="pb-3 xl:pb-4 font-semibold">
+                Choose your role
+              </legend>
               {rolesData.map((role, index) => (
                 <div
                   onClick={() => handleFilter(role)}
@@ -230,15 +247,25 @@ const Index = () => {
             </fieldset>
           </div>
 
-          <div className="w-4/5">
-            <table className="table-auto min-w-full shadow-sm mb-2">
+          <div className="min-w-full xl:min-w-0 xl:w-4/5 pb-10 xl:pb-5">
+            <table className="table-auto min-w-full shadow-sm mb-3 xl:mb-2">
               <thead className="bg-gray-50 text-left">
                 <tr>
-                  <th className="w-[30%] pl-2 py-2">Name</th>
-                  <th className="w-[25%] py-2">Title</th>
-                  <th className="w-[25%] py-2">Email</th>
-                  <th className="w-[10%] py-2">Role</th>
-                  <th className="w-[10%] py-2 text-center">Option</th>
+                  <th className="w-3/4 text-sm font-medium xl:w-[30%] px-3 py-3">
+                    Name
+                  </th>
+                  <th className="hidden text-sm font-medium xl:inline-block xl:w-[50%] py-3">
+                    Title
+                  </th>
+                  <th className="hidden text-sm font-medium xl:inline-block xl:w-[25%] py-3">
+                    Email
+                  </th>
+                  <th className="w-2/5 text-sm font-medium xl:w-[10%] py-3">
+                    Role
+                  </th>
+                  <th className="w-[10%] text-sm font-medium py-3 px-2 text-center">
+                    Option
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -249,22 +276,30 @@ const Index = () => {
                 ) : (
                   users.map((value, index) => (
                     <tr key={index} className="border-b-2">
-                      <td className="w-[30%] pl-2 py-2">{value?.name}</td>
-                      <td className="w-[25%] py-2">{value?.title}</td>
-                      <td className="w-[25%] py-2">{value?.email}</td>
-                      <td className="w-[10%] py-2">{value?.role}</td>
-                      <td className="py-2 text-center">
+                      <td className="w-2/4 xl:w-[30%] px-3 text-sm py-3">
+                        {value?.name}
+                      </td>
+                      <td className="hidden xl:inline-block text-sm xl:w-[50%] py-3">
+                        {value?.title}
+                      </td>
+                      <td className="hidden xl:inline-block text-sm xl:w-[25%] py-3">
+                        {value?.email}
+                      </td>
+                      <td className="w-2/5 xl:w-[10%] text-sm py-3">
+                        {value?.role}
+                      </td>
+                      <td className="w-[10%] py-3 text-center">
                         <button
                           onClick={() => handleUpdate(value)}
-                          className="mr-7 text-indigo-500"
+                          className="mr-2 xl:mr-5 text-indigo-500"
                         >
-                          <FaEdit className="text-xl" />
+                          <FaEdit className="text-lg" />
                         </button>
                         <button
                           onClick={() => handleDelete(value)}
                           className="text-red-600"
                         >
-                          <RiDeleteBin6Line className="text-xl" />
+                          <RiDeleteBin6Line className="text-lg" />
                         </button>
                       </td>
                     </tr>
