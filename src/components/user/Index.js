@@ -152,10 +152,10 @@ const Index = () => {
         setCurrentPage={handleResetPage}
       />
 
-      <div className="min-w-full h-full xl:p-5">
-        <div className="xl:flex xl:items-center xl:justify-between mb-5">
-          <div className="xl:ml-6">
-            <h1 className="font-semibold text-xl xl:text-2xl mb-2">
+      <div className="min-w-full h-full lg:p-4 xl:p-5">
+        <div className="xl:flex xl:items-center xl:justify-between lg:flex lg:items-center lg:justify-between mb-5">
+          <div className="xl:ml-6 lg:ml-1">
+            <h1 className="font-semibold text-xl lg:text-2xl xl:text-2xl mb-2">
               Manage User
             </h1>
             <p className="text-sm">
@@ -173,8 +173,8 @@ const Index = () => {
           </div>
         </div>
 
-        <div className="xl:flex xl:justify-between items-center">
-          <div className="flex items-center p-2 border-2 rounded-md min-w-full xl:min-w-0 xl:w-1/4 xl:ml-[20%] border-indigo-300 mb-3 xl:mb-0">
+        <div className="xl:flex xl:justify-between lg:flex lg:justify-between items-center">
+          <div className="flex items-center p-2 border-2 rounded-md min-w-full lg:min-w-0 xl:min-w-0 lg:w-2/4 lg:ml-1/5 xl:w-1/4 xl:ml-[20%] border-indigo-300 mb-3 lg:mb-0 xl:mb-0">
             <BiSearchAlt className="text-xl" />
             <input
               placeholder="search"
@@ -251,16 +251,16 @@ const Index = () => {
             <table className="table-auto min-w-full shadow-sm mb-3 xl:mb-2">
               <thead className="bg-gray-50 text-left">
                 <tr>
-                  <th className="w-3/4 text-sm font-medium xl:w-[30%] px-3 py-3">
+                  <th className="w-3/4 lg:w-1/4 text-sm font-medium xl:w-[30%] px-3 py-3">
                     Name
                   </th>
-                  <th className="hidden text-sm font-medium xl:inline-block xl:w-[50%] py-3">
+                  <th className="hidden text-sm font-medium lg:inline-block lg:w-2/4 xl:inline-block xl:w-[50%] py-3">
                     Title
                   </th>
-                  <th className="hidden text-sm font-medium xl:inline-block xl:w-[25%] py-3">
+                  <th className="hidden text-sm font-medium lg:inline-block lg:w-[30%] xl:inline-block xl:w-1/4 py-3">
                     Email
                   </th>
-                  <th className="w-2/5 text-sm font-medium xl:w-[10%] py-3">
+                  <th className="w-2/5 text-sm font-medium lg:w-[10%] xl:w-[10%] py-3">
                     Role
                   </th>
                   <th className="w-[10%] text-sm font-medium py-3 px-2 text-center">
@@ -276,16 +276,16 @@ const Index = () => {
                 ) : (
                   users.map((value, index) => (
                     <tr key={index} className="border-b-2">
-                      <td className="w-2/4 xl:w-[30%] px-3 text-sm py-3">
+                      <td className="w-2/4 lg:w-1/4 xl:w-[30%] px-3 text-sm py-3">
                         {value?.name}
                       </td>
-                      <td className="hidden xl:inline-block text-sm xl:w-[50%] py-3">
+                      <td className="hidden lg:inline-block lg:w-2/4 xl:inline-block text-sm xl:w-[50%] py-3">
                         {value?.title}
                       </td>
-                      <td className="hidden xl:inline-block text-sm xl:w-[25%] py-3">
+                      <td className="hidden xl:inline-block lg:inline-block lg:w-[30%] text-sm xl:w-[25%] py-3">
                         {value?.email}
                       </td>
-                      <td className="w-2/5 xl:w-[10%] text-sm py-3">
+                      <td className="w-2/5 lg:w-[10%] xl:w-[10%] text-sm py-3">
                         {value?.role}
                       </td>
                       <td className="w-[10%] py-3 text-center">

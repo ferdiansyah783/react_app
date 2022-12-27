@@ -57,8 +57,8 @@ const Pagination = (props) => {
 
   return (
     <>
-      <div className="flex justify-center xl:justify-between items-center">
-        <p className="hidden xl:block font-light">
+      <div className="flex justify-center lg:justify-between xl:justify-between items-center">
+        <p className="hidden lg:block xl:block font-light">
           showing <span className="font-semibold">{startIndex}</span> to{" "}
           <span className="font-semibold">{endIndex}</span> of{" "}
           <span className="font-semibold">{props.totalPosts}</span> results
