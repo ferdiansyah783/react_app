@@ -54,6 +54,7 @@ const Pagination = (props) => {
     props.currentPage,
     5
   );
+  
 
   return (
     <>
