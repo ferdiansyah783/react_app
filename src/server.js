@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-    baseURL: `https://rbthemes.com/api`,
+    baseURL: `https://api.sagitanirus.com`,
     headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
