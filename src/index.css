@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+.auth-input {
+    @apply rounded-full h-11 w-full focus:ring-2 focus:ring-indigo-400 focus:border-none border-stone-200 placeholder-stone-400 placeholder:text-sm pl-5 text-stone-600;
+}
