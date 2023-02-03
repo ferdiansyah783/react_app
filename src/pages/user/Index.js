@@ -4,7 +4,7 @@ import { BiSearchAlt } from "react-icons/bi";
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { getUsers } from "../../server";
-import Pagination from "../layout/Pagination";
+import Pagination from "../../components/layout/Pagination";
 import Create from "./Create";
 import Delete from "./Delete";
 import Update from "./Update";
