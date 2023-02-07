@@ -1,13 +1,17 @@
 import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
 import Index from "./pages/user/Index";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <>
-      <div className="h-screen p-4 flex">
-        <Login/>
-      </div>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Index/>} />
+        <Route path="/login" element={<Login/>} />
+        <Route path="/register" element={<Register/>} />
+      </Routes>
+    </Router>
   );
 }
 

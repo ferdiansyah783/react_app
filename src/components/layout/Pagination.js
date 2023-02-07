@@ -67,7 +67,7 @@ const Pagination = (props) => {
         <div>
           <button
             className={`border py-1 px-3 rounded-md mr-2 ${
-              props.currentPage === 1 ? "bg-slate-400 text-white" : ""
+              props.currentPage === 1 ? "bg-slate-500 text-white" : ""
             }`}
             disabled={props.currentPage === 1 ? true : false}
             onClick={props.handlePrev}
@@ -80,7 +80,7 @@ const Pagination = (props) => {
               onClick={() => props.setCurrentPage(value)}
               className={`border ${
                 props.currentPage > 9 ? "px-2 xl:px-3 py-1" : ""
-              } px-3 py-1 rounded-md ${
+              } px-4 py-1 rounded-md ${
                 props.currentPage === value
                   ? "active bg-indigo-600 text-white"
                   : ""
@@ -91,7 +91,7 @@ const Pagination = (props) => {
           ))}
           <button
             className={`border py-1 px-3 rounded-md ml-2 ${
-              props.currentPage === lastPage ? "bg-slate-400 text-white" : ""
+              props.currentPage === lastPage ? "bg-slate-500 text-white" : ""
             }`}
             disabled={props.currentPage === lastPage ? true : false}
             onClick={props.handleNext}

@@ -1,9 +1,10 @@
-import { Alert, Button, Label, Modal, Select, TextInput } from "flowbite-react";
 import React, { useEffect, useState } from "react";
-import { updateUser } from "../../server";
+import AlertSuccess from "../../components/alert/AlertSuccess";
+import ModalInput from "../../components/modal/ModalInput";
 import { validate } from "../../lib/Validation";
+import server from "../../server";
 
-const Update = (props) => {
+const Update = ({show, close, user, setRefreshPage}) => {
   const [dataUser, setDataUser] = useState({});
   const [allertVisible, setAlletrVisible] = useState("hidden");
   const [errorMessage, setErrorMessage] = useState({
@@ -49,13 +50,13 @@ const Update = (props) => {
   // useEffect
   useEffect(() => {
     setDataUser({
-      id: props.user.id,
-      name: props.user.name,
-      title: props.user.title,
-      email: props.user.email,
-      role: props.user.role,
+      id: user.id,
+      name: user.name,
+      title: user.title,
+      email: user.email,
+      role: user.role,
     });
-  }, [props]);
+  }, [user]);
 
   // update user
   const updateDataUser = () => {
@@ -70,12 +71,13 @@ const Update = (props) => {
       return setErrorMessage(validateData);
     }
 
-    updateUser(dataUser)
+    server
+      .updateUser(dataUser)
       .then((result) => {
         if (result.status === 204) {
-          props.close();
+          close();
           setAlletrVisible("block");
-          props.setRefreshPage();
+          setRefreshPage();
           setTimeout(() => {
             setAlletrVisible("hidden");
           }, 4000);
@@ -86,68 +88,23 @@ const Update = (props) => {
 
   return (
     <>
-      {/* alert */}
-      <Alert
-        className={`${allertVisible} absolute top-0 right-0 left-0 w-full xl:w-2/4 mx-auto`}
+      <AlertSuccess
+        allertVisible={allertVisible}
         color="success"
-      >
-        <span>
-          <span className="font-medium">Info alert!</span> user update
-          successfully
-        </span>
-      </Alert>
+        value="user update
+          successfully"
+      />
 
-      {/* modal */}
-      <React.Fragment>
-        <Modal show={props.show} size="lg" popup={true}>
-          <Modal.Header onClick={props.close} />
-          <Modal.Body>
-            <div className="space-y-6 px-6 pb-4 sm:pb-6 lg:px-8 xl:pb-8">
-              <h3 className="text-xl font-medium text-gray-900 dark:text-white">
-                Update user
-              </h3>
-              {inputData.map((value, index) => (
-                <div key={index}>
-                  <div className="mb-2 block">
-                    <Label htmlFor={value.name} value={value.label} />
-                  </div>
-                  <TextInput
-                    id={value.name}
-                    name={value.name}
-                    placeholder={value.placeholder}
-                    value={value.value}
-                    onChange={(e) => value.onChange(e)}
-                  />
-                  <label className="text-red-600 text-sm">
-                    {value.errorMessage}
-                  </label>
-                </div>
-              ))}
-
-              <div id="select">
-                <div className="mb-2 block">
-                  <Label htmlFor="countries" value="Select your role" />
-                </div>
-                <Select
-                  value={dataUser.role}
-                  onChange={(e) =>
-                    setDataUser({ ...dataUser, role: e.target.value })
-                  }
-                  id="countries"
-                >
-                  {rolesData.map((role, index) => (
-                    <option key={index}>{role}</option>
-                  ))}
-                </Select>
-              </div>
-
-              <div className="w-full">
-                <Button onClick={updateDataUser}>Save</Button>
-              </div>
-            </div>
-          </Modal.Body>
-        </Modal>
-      </React.Fragment>
+      <ModalInput
+        show={show}
+        handleModalHeader={close}
+        value="Update User"
+        inputData={inputData}
+        dataUser={dataUser}
+        handleSelect={(e) => setDataUser({ ...dataUser, role: e.target.value })}
+        rolesData={rolesData}
+        handleSubmit={updateDataUser}
+      />
     </>
   );
 };

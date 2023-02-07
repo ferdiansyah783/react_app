@@ -3,11 +3,13 @@ import React, { useEffect, useState } from "react";
 import { BiSearchAlt } from "react-icons/bi";
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { getUsers } from "../../server";
+import server from "../../server";
 import Pagination from "../../components/layout/Pagination";
 import Create from "./Create";
 import Delete from "./Delete";
 import Update from "./Update";
+import { useNavigate } from "react-router-dom";
+import Logout from "../auth/Logout";
 
 const Index = () => {
   const [users, setUsers] = useState([]);
@@ -17,6 +19,7 @@ const Index = () => {
     create: false,
     update: false,
     delete: false,
+    logout: false,
   });
   const [dataUser, setDataUser] = useState({
     id: "",
@@ -32,6 +35,9 @@ const Index = () => {
     _sort: "",
     q: "",
   });
+
+  // useNavigate
+  const navigate = useNavigate();
 
   // queryBuilder
   const availableQuery = [];
@@ -119,15 +125,25 @@ const Index = () => {
     setDataUser({ ...dataUser, id: value?.id });
   };
 
+  // handle logout
+  const handleModalLogout = () => {
+    setModalVisible({ ...modalVisible, logout: true });
+  };
+
   // useeffect
   useEffect(() => {
-    getUsers(queryBuilder)
+    if (!localStorage.getItem("token")) return navigate("/login");
+
+    server.setHeader();
+    server
+      .getUsers(queryBuilder)
       .then((result) => {
+        
         setTotalPosts(result?.headers["x-total-count"]);
         setUsers(result?.data?.data);
       })
       .catch((err) => console.log(err));
-  }, [refreshPage, queryBuilder]);
+  }, [navigate, refreshPage, queryBuilder]);
 
   return (
     <>
@@ -152,7 +168,12 @@ const Index = () => {
         setCurrentPage={handleResetPage}
       />
 
-      <div className="min-w-full h-full lg:p-4 xl:p-5">
+      <Logout
+        show={modalVisible.logout}
+        close={() => setModalVisible({ ...modalVisible, logout: false })}
+      />
+
+      <div className="min-w-full p-5 h-screen lg:p-5 xl:py-5 xl:px-10">
         <div className="xl:flex xl:items-center xl:justify-between lg:flex lg:items-center lg:justify-between mb-5">
           <div className="xl:ml-6 lg:ml-1">
             <h1 className="font-semibold text-xl lg:text-2xl xl:text-2xl mb-2">
@@ -165,10 +186,10 @@ const Index = () => {
           </div>
           <div className="mt-3">
             <button
-              onClick={() => setModalVisible({ ...modalVisible, create: true })}
-              className="bg-indigo-600 text-white py-2 rounded-md px-4 text-sm font-semibold"
+              onClick={handleModalLogout}
+              className="bg-red-600 text-white py-2 rounded-md px-4 text-sm font-semibold"
             >
-              Add User
+              Logout
             </button>
           </div>
         </div>
@@ -184,13 +205,23 @@ const Index = () => {
           </div>
 
           <div className="flex items-center justify-end">
-            <div className="">
+            <div>
+              <button
+                onClick={() =>
+                  setModalVisible({ ...modalVisible, create: true })
+                }
+                className="bg-indigo-600 text-white py-2 rounded-md px-4 text-sm font-semibold"
+              >
+                Add User
+              </button>
+            </div>
+
+            <div className="ml-3">
               <Select
                 required={true}
                 className="w-24"
                 style={{
                   backgroundColor: "transparent",
-                  border: "none",
                   outline: "none",
                 }}
                 onChange={(e) => handleSort(e)}
@@ -251,19 +282,19 @@ const Index = () => {
             <table className="table-auto min-w-full shadow-sm mb-3 xl:mb-2">
               <thead className="bg-gray-50 text-left">
                 <tr>
-                  <th className="w-3/4 lg:w-1/4 text-sm font-medium xl:w-[30%] px-3 py-3">
+                  <th className="w-3/4 lg:w-1/4 text-sm font-semibold xl:w-[30%] px-3 py-3">
                     Name
                   </th>
-                  <th className="hidden text-sm font-medium lg:inline-block lg:w-2/4 xl:inline-block xl:w-[50%] py-3">
+                  <th className="hidden text-sm font-semibold lg:inline-block lg:w-2/4 xl:inline-block xl:w-[50%] py-3">
                     Title
                   </th>
-                  <th className="hidden text-sm font-medium lg:inline-block lg:w-[30%] xl:inline-block xl:w-1/4 py-3">
+                  <th className="hidden text-sm font-semibold lg:inline-block lg:w-[30%] xl:inline-block xl:w-1/4 py-3">
                     Email
                   </th>
-                  <th className="w-2/5 text-sm font-medium lg:w-[10%] xl:w-[10%] py-3">
+                  <th className="w-2/5 text-sm font-semibold lg:w-[10%] xl:w-[10%] py-3">
                     Role
                   </th>
-                  <th className="w-[10%] text-sm font-medium py-3 px-2 text-center">
+                  <th className="w-[10%] text-sm font-semibold py-3 px-2 text-center">
                     Option
                   </th>
                 </tr>
@@ -286,7 +317,7 @@ const Index = () => {
                         {value?.email}
                       </td>
                       <td className="w-2/5 lg:w-[10%] xl:w-[10%] text-sm py-3">
-                        {value?.role}
+                        {value?.role?.name}
                       </td>
                       <td className="w-[10%] py-3 text-center">
                         <button
