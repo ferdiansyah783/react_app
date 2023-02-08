@@ -87,8 +87,17 @@ const Login = () => {
             </div>
           </div>
           <div className="hidden xl:block ">
-            <div className="bg-indigo-500 h-full rounded-r-xl p-10 flex justify-center items-center">
-              <div className="w-40 h-40 drop-shadow-lg shadow-sm shadow-slate-50 bg-indigo-500 rounded-full flex items-center justify-center">
+            <div className="bg-indigo-500 h-full rounded-r-xl p-10 relative">
+              <span className="-z-10">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    fill="#FFFFFF"
+                    d="M34,-56.3C48.4,-50.6,67.5,-50.3,74.1,-41.8C80.7,-33.3,74.8,-16.6,71.5,-1.9C68.1,12.7,67.1,25.5,59.8,32.7C52.5,40,38.8,41.7,27.7,50.9C16.7,60.2,8.4,76.9,-0.1,77.1C-8.5,77.2,-17,60.8,-24.8,49.6C-32.6,38.5,-39.6,32.7,-50.2,25.3C-60.9,17.9,-75.2,9,-78.8,-2.1C-82.5,-13.2,-75.5,-26.4,-66.6,-36.7C-57.6,-47.1,-46.7,-54.6,-35.3,-62.1C-23.9,-69.6,-11.9,-77,-1.1,-75.2C9.8,-73.3,19.6,-62.1,34,-56.3Z"
+                    transform="translate(100 100)"
+                  />
+                </svg>
+              </span>
+              <div className="w-40 h-40 absolute right-52 top-52 drop-shadow-lg shadow-sm shadow-slate-50 bg-indigo-500 rounded-full flex items-center justify-center">
                 <h1 className="text-white text-5xl font-bold">AI</h1>
               </div>
             </div>

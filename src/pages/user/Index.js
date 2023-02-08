@@ -53,7 +53,7 @@ const Index = () => {
   const queryBuilder = availableQuery.join("&");
 
   // filter
-  const rolesData = ["all-users", "member", "admin", "team"];
+  const rolesData = ["all-users", "admin", "seller", "buyer"];
 
   const handleFilter = (role) => {
     role === "all-users"
@@ -138,11 +138,14 @@ const Index = () => {
     server
       .getUsers(queryBuilder)
       .then((result) => {
-        
         setTotalPosts(result?.headers["x-total-count"]);
         setUsers(result?.data?.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        if (err.response.status === 403) {
+          alert("access denied")
+        }
+      });
   }, [navigate, refreshPage, queryBuilder]);
 
   return (
