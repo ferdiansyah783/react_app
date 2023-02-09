@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import server from "../../server";
+import AlertSuccess from "../../components/alert/AlertSuccess";
 
 const Register = () => {
   const [dataUser, setDataUser] = useState({
@@ -9,15 +10,20 @@ const Register = () => {
     email: "",
     password: "",
   });
+  const [allertVisible, setAlletrVisible] = useState("hidden");
 
   const navigateLogin = useNavigate();
 
   const handleRegister = (e) => {
     e.preventDefault();
-    server.register(dataUser)
+    server
+      .register(dataUser)
       .then((result) => {
         if (result.status === 201) {
-          console.log(result);
+          setAlletrVisible("block")
+          setTimeout(() => {
+            setAlletrVisible("hidden");
+          }, 4000);
         }
       })
       .catch((err) => console.log(err));
@@ -25,30 +31,26 @@ const Register = () => {
 
   return (
     <>
-      <section className="w-full h-screen flex items-center">
-        <div className="w-[40%] h-[90%] bg-white drop-shadow-lg mx-auto rounded-2xl">
-          <div className="flex flex-col items-center gap-6 py-7">
-            <div className="w-20 h-20 bg-indigo-500 rounded-full flex items-center justify-center">
-              <h1 className="text-white text-4xl font-bold">AI</h1>
-            </div>
-            <h2 className="font-semibold text-2xl text-stone-700">
-              Welcome to AI Management
-            </h2>
-            <div className="text-center text-stone-400 tracking-wide">
-              <p>Register to create your first account and start exploring</p>
-              <p>the AI management</p>
-            </div>
-            <form onSubmit={handleRegister} className="flex flex-col gap-4 w-[55%] mb-5">
+    <AlertSuccess allertVisible={allertVisible} color="success" value="user register success, please login"  />
+      <section className="w-full h-screen flex justify-center py-32 lg:items-center xl:py-0 xl:items-center">
+        <div className="w-full lg:w-[60%] lg:h-[90%] xl:w-[60%] xl:h-[80%] grid xl:grid-cols-2 lg:drop-shadow-lg xl:drop-shadow-lg lg:rounded-xl xl:rounded-xl bg-white">
+          <div className="p-7 md:p-14 lg:p-20 xl:p-24">
+            <p className="text-gray-600 mb-12">
+              <span className="font-bold text-lg text-indigo-500">
+                Register
+              </span>{" "}
+              to create your first account and start exploring the AI management
+            </p>
+            <form onSubmit={handleRegister} className="flex flex-col gap-4 my-3">
               <label className="block">
                 <span className="block text-sm font-medium text-slate-700 mb-2">
                   Name
                 </span>
                 <input
+                  name="name"
                   type={"text"}
                   placeholder="Enter your full name"
-                  className="auth-input bg-slate-50"
-                  value={dataUser.name}
-                  name="name"
+                  className="auth-input"
                   onChange={(e) =>
                     setDataUser({ ...dataUser, name: e.target.value })
                   }
@@ -59,11 +61,10 @@ const Register = () => {
                   Title
                 </span>
                 <input
+                  name="title"
                   type={"text"}
                   placeholder="Enter your title"
-                  className="auth-input bg-slate-50"
-                  value={dataUser.title}
-                  name="title"
+                  className="auth-input"
                   onChange={(e) =>
                     setDataUser({ ...dataUser, title: e.target.value })
                   }
@@ -74,11 +75,10 @@ const Register = () => {
                   Email
                 </span>
                 <input
+                  name="email"
                   type={"email"}
                   placeholder="Enter your email"
-                  className="auth-input bg-slate-50"
-                  value={dataUser.email}
-                  name="email"
+                  className="auth-input"
                   onChange={(e) =>
                     setDataUser({ ...dataUser, email: e.target.value })
                   }
@@ -89,11 +89,10 @@ const Register = () => {
                   Password
                 </span>
                 <input
+                  name="password"
                   type={"password"}
                   placeholder="Enter your password"
-                  className="auth-input bg-slate-50"
-                  value={dataUser.password}
-                  name="password"
+                  className="auth-input"
                   onChange={(e) =>
                     setDataUser({ ...dataUser, password: e.target.value })
                   }
@@ -101,20 +100,25 @@ const Register = () => {
               </label>
               <button
                 type="submit"
-                className="bg-indigo-500 py-3 rounded-full text-white hover:bg-indigo-600"
+                className="bg-indigo-500 py-2 rounded-full text-white hover:bg-indigo-600"
               >
                 Register
               </button>
             </form>
-            <p className="text-stone-400">
-              Already have account?{" "}
-              <span
-                onClick={() => navigateLogin("/login")}
-                className="font-bold text-stone-700 cursor-pointer"
-              >
-                Login
-              </span>
-            </p>
+            <div className="text-center text-stone-400">
+              <p className="text-stone-400">
+                Already have account?{" "}
+                <span
+                  onClick={() => navigateLogin("/login")}
+                  className="font-bold text-stone-700 cursor-pointer"
+                >
+                  Login
+                </span>
+              </p>
+            </div>
+          </div>
+          <div className="hidden xl:block ">
+            <div className="bg-indigo-500 h-full rounded-r-xl p-10 flex justify-center"></div>
           </div>
         </div>
       </section>
