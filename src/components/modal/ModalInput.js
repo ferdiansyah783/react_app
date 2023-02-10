@@ -34,9 +34,9 @@ const ModalInput = ({
                       value={value.value}
                       onChange={(e) => value.onChange(e)}
                     />
-                    <label className="text-red-600 text-sm">
+                    <p className="text-red-600 text-sm">
                       {value.errorMessage}
-                    </label>
+                    </p>
                   </div>
                 ))}
 

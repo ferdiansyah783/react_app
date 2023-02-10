@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import server from "../../server";
+import { validate } from "../../lib/Validation";
+import AlertSuccess from "../../components/alert/AlertSuccess";
 
 const Login = () => {
   const [fieldsLogin, setFieldsLogin] = useState({
     email: "",
     password: "",
   });
+  const [errorMessage, setErrorMessage] = useState({
+    email: "",
+    password: "",
+  });
+  const [allertFailureVisible, setAllertFailureVisible] = useState("hidden");
+  const [allertSuccessVisible, setAllertSuccessVisible] = useState("hidden");
 
   const navigate = useNavigate();
 
@@ -17,22 +25,54 @@ const Login = () => {
   const handleLogin = (e) => {
     e.preventDefault();
 
+    const rules = {
+      email: ["isRequired", "isEmail"],
+      password: ["isRequired", "isAlpha", "minChar"],
+    };
+
+    const validateFields = validate(fieldsLogin, rules);
+
+    if (Object.keys(validateFields).length) {
+      return setErrorMessage(validateFields);
+    }
+
     server
       .login(fieldsLogin)
       .then((result) => {
         if (result.status === 200) {
           const { access_token } = result.data;
           localStorage.setItem("token", access_token);
+          setAllertSuccessVisible("block");
           setTimeout(() => {
+            setAllertSuccessVisible("hidden");
             navigate("/");
-          }, 2000);
+          }, 3000);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        if (err.response.status === 400) {
+          setAllertFailureVisible("block");
+          setTimeout(() => {
+            setAllertFailureVisible("hidden");
+          }, 4000);
+        }
+      });
   };
 
   return (
     <>
+      <AlertSuccess
+        allertVisible={allertFailureVisible}
+        color="failure"
+        value="Bad Credentials"
+      />
+
+      <AlertSuccess
+        allertVisible={allertSuccessVisible}
+        color="success"
+        value="Login Successfully"
+      />
+
       <section className="w-full h-screen flex justify-center py-32 lg:items-center xl:py-0 xl:items-center">
         <div className="w-full lg:w-[60%] lg:h-[90%] xl:w-[60%] xl:h-[80%] grid xl:grid-cols-2 lg:drop-shadow-lg xl:drop-shadow-lg lg:rounded-xl xl:rounded-xl bg-white">
           <div className="p-7 md:p-14 lg:p-20 xl:p-24  relative">
@@ -47,13 +87,16 @@ const Login = () => {
                 </span>
                 <input
                   name="email"
-                  type={"email"}
+                  type={"text"}
                   placeholder="Enter your email"
                   className="auth-input"
                   onChange={(e) =>
                     setFieldsLogin({ ...fieldsLogin, email: e.target.value })
                   }
                 />
+                <p className="text-sm pl-4 text-red-600">
+                  {errorMessage.email}
+                </p>
               </label>
               <label className="block mb-5">
                 <span className="block text-sm font-medium text-slate-700 mb-2">
@@ -68,6 +111,9 @@ const Login = () => {
                     setFieldsLogin({ ...fieldsLogin, password: e.target.value })
                   }
                 />
+                <p className="text-sm pl-4 text-red-600">
+                  {errorMessage.password}
+                </p>
               </label>
               <button
                 type="submit"
@@ -88,7 +134,7 @@ const Login = () => {
           </div>
           <div className="hidden xl:block ">
             <div className="bg-indigo-500 h-full rounded-r-xl p-10 relative">
-              <span className="-z-10">
+              <span className="">
                 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                   <path
                     fill="#FFFFFF"
@@ -97,7 +143,7 @@ const Login = () => {
                   />
                 </svg>
               </span>
-              <div className="w-40 h-40 absolute right-52 top-52 drop-shadow-lg shadow-sm shadow-slate-50 bg-indigo-500 rounded-full flex items-center justify-center">
+              <div className="w-40 h-40 absolute right-52 top-52 drop-shadow-md shadow-sm shadow-slate-50 bg-indigo-500 rounded-full flex items-center justify-center">
                 <h1 className="text-white text-5xl font-bold">AI</h1>
               </div>
             </div>
