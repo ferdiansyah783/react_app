@@ -1,11 +1,9 @@
 import Index from "./pages/user/Index";
 
-function App() {
+const App = () => {
   return (
     <>
-      <div className="h-screen p-4 flex">
-        <Index/>
-      </div>
+      
     </>
   );
 }
