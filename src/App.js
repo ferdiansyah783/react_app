@@ -1,9 +1,9 @@
-import Index from "./pages/user/Index";
+import Dashboard from "./pages/Dashboard";
 
 const App = () => {
   return (
     <>
-      
+      <Dashboard/>
     </>
   );
 }
